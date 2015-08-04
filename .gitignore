@@ -3,7 +3,10 @@ NLog.*
 Newtonsoft.Json.*
 ILMerge.*
 CommandLineParser.*
+CreateNewNuGetPackage*
+_CreateNewNuGetPackage/
 .nuget/
+*.nupkg
 packages/repositories.config
 
 # Unnecessary compilation files/folders

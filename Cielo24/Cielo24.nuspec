@@ -7,7 +7,7 @@
     <authors>$author$</authors>
     <owners>$author$</owners>
     <licenseUrl>http://www.cielo24.com</licenseUrl>
-    <projectUrl>http://www.cielo24.com</projectUrl>
+    <projectUrl>https://github.com/Cielo24/cielo24-dotnet</projectUrl>
     <iconUrl>https://s3.amazonaws.com/cf_stage/company/logo/5305.jpg?956006</iconUrl>
     <requireLicenseAcceptance>false</requireLicenseAcceptance>
     <description>$description$</description>
@@ -16,6 +16,7 @@
     <tags>cielo24</tags>
     <dependencies>
       <dependency id="Newtonsoft.Json" version="6.0.8" />
+      <dependency id="NLog" version="4.0.1" />
     </dependencies>
   </metadata>
 </package>
