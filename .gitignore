@@ -15,6 +15,7 @@ CommandLineTool/bin/Release/CommandLine.xml
 CommandLineTool/bin/Release/CommandLineTool.exe
 CommandLineTool/bin/Release/CommandLine.dll
 CommandLineTool/bin/Release/Cielo24Merged.dll
+.vs/
 
 # Unittest reports
 TestResults/
