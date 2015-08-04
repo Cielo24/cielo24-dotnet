@@ -1,0 +1,20 @@
+# NuGet packages
+NLog.*
+Newtonsoft.Json.*
+ILMerge.*
+CommandLineParser.*
+.nuget/
+packages/repositories.config
+
+# Unnecessary compilation files/folders
+*.pdb
+obj/
+Debug/
+UnitTest/bin/
+CommandLineTool/bin/Release/CommandLine.xml
+CommandLineTool/bin/Release/CommandLineTool.exe
+CommandLineTool/bin/Release/CommandLine.dll
+CommandLineTool/bin/Release/Cielo24Merged.dll
+
+# Unittest reports
+TestResults/
