@@ -19,14 +19,14 @@ namespace Cielo24
         public string HttpRequest(Uri uri, HttpMethod method, TimeSpan timeout, Dictionary<string, string> headers = null)
         {
             logger.Info("Uri: " + uri);
-            HttpWebRequest request = (HttpWebRequest)HttpWebRequest.Create(uri);
+            var request = (HttpWebRequest)HttpWebRequest.Create(uri);
             request.Method = method.ToString();
-            foreach (KeyValuePair<string, string> pair in headers ?? new Dictionary<string, string>())
+            foreach (var pair in headers ?? new Dictionary<string, string>())
             {
                 request.Headers[pair.Key] = pair.Value;
             }
 
-            IAsyncResult asyncResult = request.BeginGetResponse(null, null);
+            var asyncResult = request.BeginGetResponse(null, null);
             asyncResult.AsyncWaitHandle.WaitOne(timeout); // Wait untill response is received, then proceed
             if (asyncResult.IsCompleted)
             {
@@ -38,7 +38,7 @@ namespace Cielo24
         /* Used exclusively by UpdatePassword method */
         public string HttpRequest(Uri uri, HttpMethod method, TimeSpan timeout, string requestBody)
         {
-            MemoryStream s = new MemoryStream(Encoding.UTF8.GetBytes(requestBody));
+            var s = new MemoryStream(Encoding.UTF8.GetBytes(requestBody));
             return UploadData(uri, s, "password");
         }
 
@@ -46,19 +46,19 @@ namespace Cielo24
         public string UploadData(Uri uri, Stream inputStream, string contentType)
         {
             Debug.WriteLine("Uri: " + uri);
-            HttpWebRequest request = (HttpWebRequest)HttpWebRequest.Create(uri);
+            var request = (HttpWebRequest)HttpWebRequest.Create(uri);
             request.Method = HttpMethod.POST.ToString();
             request.ContentType = contentType;
             request.AllowWriteStreamBuffering = false;
             request.ContentLength = inputStream.Length;
 
-            IAsyncResult asyncRequest = request.BeginGetRequestStream(null, null);
+            var asyncRequest = request.BeginGetRequestStream(null, null);
             asyncRequest.AsyncWaitHandle.WaitOne(BASIC_TIMEOUT); // Wait untill stream is opened
             if (asyncRequest.IsCompleted)
             {
                 try
                 {
-                    Stream webStream = request.EndGetRequestStream(asyncRequest);
+                    var webStream = request.EndGetRequestStream(asyncRequest);
                     inputStream.CopyTo(webStream);
                     inputStream.Dispose();
                     webStream.Flush();
@@ -74,7 +74,7 @@ namespace Cielo24
                 throw new WebException("Timeout error: could not open stream for data uploading.");
             }
 
-            IAsyncResult asyncResponse = request.BeginGetResponse(null, null);
+            var asyncResponse = request.BeginGetResponse(null, null);
             asyncResponse.AsyncWaitHandle.WaitOne();
             if (asyncResponse.IsCompleted)
             {
@@ -88,19 +88,19 @@ namespace Cielo24
         {
             try
             {
-                HttpWebResponse response = (HttpWebResponse)request.EndGetResponse(asyncResponse);
-                Stream stream = response.GetResponseStream();
-                StreamReader streamReader = new StreamReader(stream);
-                string serverResponse = streamReader.ReadToEnd();
+                var response = (HttpWebResponse)request.EndGetResponse(asyncResponse);
+                var stream = response.GetResponseStream();
+                var streamReader = new StreamReader(stream);
+                var serverResponse = streamReader.ReadToEnd();
                 stream.Dispose();
                 return serverResponse;
             }
             catch (WebException error) // Catch (400) Bad Request error
             {
-                Stream errorStream = error.Response.GetResponseStream();
-                StreamReader streamReader = new StreamReader(errorStream);
-                string errorJson = streamReader.ReadToEnd();
-                Dictionary<string, string> responseDict = Utils.Deserialize<Dictionary<string, string>>(errorJson);
+                var errorStream = error.Response.GetResponseStream();
+                var streamReader = new StreamReader(errorStream);
+                var errorJson = streamReader.ReadToEnd();
+                var responseDict = Utils.Deserialize<Dictionary<string, string>>(errorJson);
                 throw new EnumWebException(responseDict["ErrorType"], responseDict["ErrorComment"]);
             }
         }

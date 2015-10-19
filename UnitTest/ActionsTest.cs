@@ -20,9 +20,9 @@ namespace UnitTest
         private void EnableCustomLogger()
         {
             // Make WebUtils log to Console as well as to Memory
-            LoggingConfiguration logConf = new LoggingConfiguration();
+            var logConf = new LoggingConfiguration();
             memoryTarget = new MemoryTarget();
-            ConsoleTarget consoleTarget = new ConsoleTarget();
+            var consoleTarget = new ConsoleTarget();
 
             logConf.AddTarget("MemoryTarget", memoryTarget);
             logConf.AddTarget("ConsoleTarget", consoleTarget);

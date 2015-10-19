@@ -34,9 +34,9 @@ namespace UnitTest
             actions.AddMediaToJob(apiToken, jobId, config.sampleVideoUri);
 
             // Assert JobList and JobInfo data
-            JobList list = actions.GetJobList(apiToken);
+            var list = actions.GetJobList(apiToken);
             Assert.IsTrue(containsJob(jobId, list), "JobId not found in JobList");
-            Job job = actions.GetJobInfo(apiToken, jobId);
+            var job = actions.GetJobInfo(apiToken, jobId);
             Assert.AreEqual(jobId, job.JobId, "Wrong JobId found in JobInfo");
 
             // Logout
@@ -60,7 +60,7 @@ namespace UnitTest
 
             // Delete job and assert JobList data
             actions.DeleteJob(apiToken, jobId);
-            JobList list2 = actions.GetJobList(apiToken);
+            var list2 = actions.GetJobList(apiToken);
             Assert.IsFalse(containsJob(jobId, list2), "JobId should not be in JobList");
 
             // Delete current API key and try to re-login (should fail)
@@ -81,7 +81,7 @@ namespace UnitTest
 
         private bool containsJob(Guid jobId, JobList list)
         {
-            foreach(Job j in list.ActiveJobs)
+            foreach(var j in list.ActiveJobs)
             {
                 if(j.JobId.Equals(jobId))
                 {

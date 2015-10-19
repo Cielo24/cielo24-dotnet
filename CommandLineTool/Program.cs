@@ -93,7 +93,7 @@ namespace CommandLineTool
                     TryAction(delegate
                     {
                         Console.WriteLine("Creating job...");
-                        Guid jobId = actions.CreateJob(options.ApiToken, options.JobName, options.SourceLanguage).JobId;
+                        var jobId = actions.CreateJob(options.ApiToken, options.JobName, options.SourceLanguage).JobId;
                         Console.WriteLine("JobId: " + jobId);
                         Console.WriteLine("Adding media...");
                         if (options.MediaFile == null)
@@ -105,7 +105,7 @@ namespace CommandLineTool
                             Console.WriteLine("TaskId: " + actions.AddMediaToJob(options.ApiToken, jobId, options.MediaFile).ToString("N"));
                         }
                         Console.WriteLine("Performing transcrition...");
-                        PerformTranscriptionOptions pto = new PerformTranscriptionOptions();
+                        var pto = new PerformTranscriptionOptions();
                         pto.PopulateFromArray(options.JobConfig);
                         return actions.PerformTranscription(options.ApiToken, jobId, options.Fidelity, options.Priority, options.CallbackUrl, options.TurnaroundHours, options.TargetLanguage, pto);
                     });
@@ -148,13 +148,13 @@ namespace CommandLineTool
                     break;
                 case "get_transcript":
                     Console.WriteLine("Getting transcript...");
-                    TranscriptOptions to = new TranscriptOptions();
+                    var to = new TranscriptOptions();
                     to.PopulateFromArray(options.CaptionOptions);
                     TryAction(delegate { return actions.GetTranscript(options.ApiToken, options.JobId, to); });
                     break;
                 case "get_caption":
                     Console.WriteLine("Getting caption...");
-                    CaptionOptions co = new CaptionOptions();
+                    var co = new CaptionOptions();
                     co.PopulateFromArray(options.CaptionOptions);
                     TryAction(delegate { return actions.GetCaption(options.ApiToken, options.JobId, options.CaptionFormat, co); });
                     break;
@@ -178,7 +178,7 @@ namespace CommandLineTool
         {
             try
             {
-                string output = action.Invoke().ToString();
+                var output = action.Invoke().ToString();
                 Console.ForegroundColor = ConsoleColor.Green;
                 Console.WriteLine("\n" + output);
                 Console.ResetColor();

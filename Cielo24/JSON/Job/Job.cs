@@ -15,7 +15,7 @@ namespace Cielo24.JSON.Job
         [JsonProperty("MediaLengthSeconds")]
         public float? MediaLengthSeconds { get; set; }
         [JsonProperty("ExternalID")]
-        public String ExternalID { get; set; }
+        public string ExternalID { get; set; }
         [JsonProperty("Priority")]
         public Priority? Priority { get; set; }
         [JsonProperty("Fidelity")]
@@ -41,8 +41,8 @@ namespace Cielo24.JSON.Job
         [JsonProperty("JobDiffiulty")]
         public JobDifficulty? JobDiffiulty { get; set; }
         [JsonProperty("ReturnTargets")]
-        public Dictionary<String, List<Dictionary<String, Object>>> ReturnTargets { get; set; }
+        public Dictionary<string, List<Dictionary<string, object>>> ReturnTargets { get; set; }
         [JsonProperty("Options")]
-        public Dictionary<String, Dictionary<String, Object>> Options { get; set; }
+        public Dictionary<string, Dictionary<string, object>> Options { get; set; }
     }
 }

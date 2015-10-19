@@ -175,7 +175,7 @@ namespace CommandLineTool
         public void PrintDefaultUsage()
         {
             Console.WriteLine("\nUsage: ./program.exe [action] [options]");
-            Console.WriteLine("Available actions: " + String.Join(", ", Verbs));
+            Console.WriteLine("Available actions: " + string.Join(", ", Verbs));
             Console.WriteLine("\nExecutes a cielo24 API call");
             Console.WriteLine("\nALWAYS REQUIRED:");
             Console.WriteLine("--------------------------");

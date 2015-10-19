@@ -219,11 +219,11 @@ namespace Cielo24
             }
             foreach (var val in objectType.GetEnumValues())
             {
-                string name = Enum.GetName(objectType, val);
-                FieldInfo field = objectType.GetField(name);
-                DescriptionAttribute desc = Attribute.GetCustomAttribute(field, typeof(DescriptionAttribute)) as DescriptionAttribute;
-                string description = desc.Description.ToLower();
-                string readerValue = reader.Value.ToString().ToLower();
+                var name = Enum.GetName(objectType, val);
+                var field = objectType.GetField(name);
+                var desc = Attribute.GetCustomAttribute(field, typeof(DescriptionAttribute)) as DescriptionAttribute;
+                var description = desc.Description.ToLower();
+                var readerValue = reader.Value.ToString().ToLower();
                 if (description.Equals(readerValue))
                 {
                     return val;
@@ -243,7 +243,7 @@ namespace Cielo24
             {
                 return base.ReadJson(reader, objectType, existingValue, serializer);
             }
-            string readerValue = reader.Value.ToString().ToUpper();
+            var readerValue = reader.Value.ToString().ToUpper();
             if (readerValue.Equals("STANDARD"))
             {
                 return Fidelity.PREMIUM;
@@ -260,14 +260,14 @@ namespace Cielo24
     {
         public static string GetDescription(this Enum value)
         {
-            Type type = value.GetType();
-            string name = Enum.GetName(type, value);
+            var type = value.GetType();
+            var name = Enum.GetName(type, value);
             if (name != null)
             {
-                FieldInfo field = type.GetField(name);
+                var field = type.GetField(name);
                 if (field != null)
                 {
-                    DescriptionAttribute desc = Attribute.GetCustomAttribute(field, typeof(DescriptionAttribute)) as DescriptionAttribute;
+                    var desc = Attribute.GetCustomAttribute(field, typeof(DescriptionAttribute)) as DescriptionAttribute;
                     if (desc != null)
                     {
                         return desc.Description;
