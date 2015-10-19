@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Linq;
 using Cielo24;
 using Cielo24.JSON.Job;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
@@ -81,14 +82,7 @@ namespace Unit_Test_for_cielo24.NET_library
 
         private static bool ContainsJob(Guid jobId, JobList list)
         {
-            foreach(var j in list.ActiveJobs)
-            {
-                if(j.JobId.Equals(jobId))
-                {
-                    return true;
-                }
-            }
-            return false;
+            return list.ActiveJobs.Any(j => j.JobId.Equals(jobId));
         }
     }
 }

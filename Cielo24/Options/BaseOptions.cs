@@ -55,9 +55,9 @@ namespace Cielo24.Options
         // Array of strings in the key=value form 
         public void PopulateFromArray(string[] array)
         {
-            foreach (var s in array ?? new string[0])
+            foreach (var dictionary in from s in array ?? new string[0]
+                                       select Regex.Matches(s, "([^?=&]+)(=([^&]*))?").Cast<Match>().ToDictionary(x => x.Groups[1].Value, x => x.Groups[3].Value))
             {
-                var dictionary = Regex.Matches(s, "([^?=&]+)(=([^&]*))?").Cast<Match>().ToDictionary(x => x.Groups[1].Value, x => x.Groups[3].Value);
                 PopulateFromKeyValuePair(dictionary.First());
             }
         }

@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Linq;
 using Newtonsoft.Json;
 
 namespace Cielo24
@@ -15,10 +16,7 @@ namespace Cielo24
         /* Creates a query string from key-value pairs in the dictionary */
         public static string ToQuery(Dictionary<string, string> dictionary){
             if (dictionary == null) { return ""; }
-            var pairs = new List<string>();
-            foreach(var pair in dictionary){
-                pairs.Add(pair.Key + "=" + Uri.EscapeDataString(pair.Value));
-            }
+            var pairs = dictionary.Select(pair => pair.Key + "=" + Uri.EscapeDataString(pair.Value));
             return string.Join("&", pairs);
         }
 
@@ -50,12 +48,7 @@ namespace Cielo24
         /* Joins list with delimeter, adding quotes around every element (result of the form ["item 1", "item2", "item 3"])*/
         public static string JoinQuoteList<T>(List<T> list, string delimeter)
         {
-            var stringList = new List<string>();
-            for (var i = 0; i < list.Count; i++)
-            {
-                stringList.Add("\"" + list[i] + "\""); // Add quotation marks
-            }
-            return "[" + string.Join(delimeter, stringList) + "]";
+            return "[" + string.Join(delimeter, list.Select(t => "\"" + t + "\"")) + "]";
         }
 
         /* Concatinates two dictionaries together returning one */
