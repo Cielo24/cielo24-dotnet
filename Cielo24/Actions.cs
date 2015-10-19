@@ -13,7 +13,7 @@ namespace Cielo24
         public const int Version = 1;
         private string baseUrl = "https://api.cielo24.com";
         public string ServerUrl { get { return baseUrl; } set { baseUrl = value; } }
-        private WebUtils web = new WebUtils();
+        private readonly WebUtils web = new WebUtils();
 
         private const string LoginPath = "/api/account/login";
         private const string LogoutPath = "/api/account/logout";
@@ -328,7 +328,7 @@ namespace Cielo24
         }
 
         /* Returns a dictionary with version, api_token and job_id key-value pairs (parameters used in almost every job-control action). */
-        private Dictionary<string, string> InitJobReqDict(Guid apiToken, Guid jobId)
+        private static Dictionary<string, string> InitJobReqDict(Guid apiToken, Guid jobId)
         {
             AssertArgument(jobId, "Job Id");
             var queryDictionary = InitAccessReqDict(apiToken);
@@ -337,7 +337,7 @@ namespace Cielo24
         }
 
         /* Returns a dictionary with version and api_token key-value pairs (parameters used in almost every access-control action). */
-        private Dictionary<string, string> InitAccessReqDict(Guid apiToken)
+        private static Dictionary<string, string> InitAccessReqDict(Guid apiToken)
         {
             AssertArgument(apiToken, "API Token");
             var queryDictionary = InitVersionDict();
@@ -346,7 +346,7 @@ namespace Cielo24
         }
 
         /* Returns a dictionary with version key-value pair (parameter used in every action). */
-        private Dictionary<string, string> InitVersionDict()
+        private static Dictionary<string, string> InitVersionDict()
         {
             var queryDictionary = new Dictionary<string, string>();
             queryDictionary.Add("v", Version.ToString());
@@ -354,17 +354,17 @@ namespace Cielo24
         }
 
         /* If arg is invalid (null or empty), throws an ArgumentException */
-        private void AssertArgument(string arg, string argName)
+        private static void AssertArgument(string arg, string argName)
         {
             if (arg == null || arg.Equals("")) { throw new ArgumentException("Invalid " + argName); }
         }
 
-        private void AssertArgument(Guid arg, string argName)
+        private static void AssertArgument(Guid arg, string argName)
         {
             if (arg.Equals(Guid.Empty)) { throw new ArgumentException("Invalid " + argName); }
         }
 
-        private void AssertArgument(object arg, string argName)
+        private static void AssertArgument(object arg, string argName)
         {
             if (arg == null) { throw new ArgumentException("Invalid " + argName); }
         }

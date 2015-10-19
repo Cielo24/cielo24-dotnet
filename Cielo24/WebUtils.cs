@@ -19,7 +19,7 @@ namespace Cielo24
         public string HttpRequest(Uri uri, HttpMethod method, TimeSpan timeout, Dictionary<string, string> headers = null)
         {
             Logger.Info("Uri: " + uri);
-            var request = (HttpWebRequest)HttpWebRequest.Create(uri);
+            var request = (HttpWebRequest) WebRequest.Create(uri);
             request.Method = method.ToString();
             foreach (var pair in headers ?? new Dictionary<string, string>())
             {
@@ -46,7 +46,7 @@ namespace Cielo24
         public string UploadData(Uri uri, Stream inputStream, string contentType)
         {
             Debug.WriteLine("Uri: " + uri);
-            var request = (HttpWebRequest)HttpWebRequest.Create(uri);
+            var request = (HttpWebRequest) WebRequest.Create(uri);
             request.Method = HttpMethod.Post.ToString();
             request.ContentType = contentType;
             request.AllowWriteStreamBuffering = false;
@@ -84,7 +84,7 @@ namespace Cielo24
         }
 
         /* Helper method */
-        private string ReadResponse(HttpWebRequest request, IAsyncResult asyncResponse)
+        private static string ReadResponse(WebRequest request, IAsyncResult asyncResponse)
         {
             try
             {
@@ -110,13 +110,12 @@ namespace Cielo24
 
     public class EnumWebException : WebException
     {
-        private string errorType;
-        public string ErrorType { get { return errorType; } }
+        public string ErrorType { get; }
 
         public EnumWebException(string errType, string message)
             : base(errType + ": " + message)
         {
-            errorType = errType;
+            ErrorType = errType;
         }
     }
 }

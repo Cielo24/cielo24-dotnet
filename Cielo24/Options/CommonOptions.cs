@@ -25,14 +25,15 @@ namespace Cielo24.Options
         [QueryName("sound_boundaries")]
         public char[] SoundBoundaries { get; set; }
 
-        public CommonOptions(DateTime? elementListVersion = null,
-                             string speakerChangeToken = null,
-                             bool? maskProfanity = null,
-                             bool? removeDisfluencies = null,
-                             List<Tag> removeSoundsList = null,
-                             bool? removeSoundReferences = null,
-                             bool? replaceSlang = null,
-                             char[] soundBoundaries = null)
+        protected CommonOptions(
+            DateTime? elementListVersion = null,
+            string speakerChangeToken = null,
+            bool? maskProfanity = null,
+            bool? removeDisfluencies = null,
+            List<Tag> removeSoundsList = null,
+            bool? removeSoundReferences = null,
+            bool? replaceSlang = null,
+            char[] soundBoundaries = null)
         {
             ElementListVersion = elementListVersion;
             SpeakerChangeToken = speakerChangeToken;

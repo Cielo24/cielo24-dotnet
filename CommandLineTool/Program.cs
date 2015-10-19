@@ -9,9 +9,9 @@ namespace CommandLineTool
 {
     class Program
     {
-        static Options options = new Options();
-        static Parser optionParser = new Parser();
-        static Actions actions = new Actions();
+        static readonly Options Options = new Options();
+        static readonly Parser OptionParser = new Parser();
+        static readonly Actions Actions = new Actions();
         static string invokedVerb;
 
         static void Main(string[] args)
@@ -19,14 +19,14 @@ namespace CommandLineTool
             //string[] argss = { "./prog.exe", "-a", "create", "-u", "testscript", "-p", "testscript2", "-m", "https://www.youtube.com/watch?v=n1JGzxvsRPg" };
             if (args.Length == 1 && Options.Verbs.Contains(args[0]))
             {
-                options.PrintActionHelp(args[0]);
+                Options.PrintActionHelp(args[0]);
             }
             else if (args.Length != 0 && Options.Verbs.Contains(args[0])) // If verb is valid
             {
                 invokedVerb = args[0];
-                if (optionParser.ParseArguments(args, options)) // If parsing successful
+                if (OptionParser.ParseArguments(args, Options)) // If parsing successful
                 {
-                    if (options.VerboseMode) // Enable verbose mode
+                    if (Options.VerboseMode) // Enable verbose mode
                     {
                         Debug.Listeners.Add(new TextWriterTraceListener(Console.Out));
                     }
@@ -42,134 +42,134 @@ namespace CommandLineTool
                 }
                 else // Parsing failed: show usage for verb
                 {
-                    options.PrintActionHelp(invokedVerb);
+                    Options.PrintActionHelp(invokedVerb);
                 }
             }
             else
             {
-                options.PrintDefaultUsage();
+                Options.PrintDefaultUsage();
             }
         }
 
         public static void CallAction(string actionName)
         {
-            actions.ServerUrl = options.ServerUrl;
+            Actions.ServerUrl = Options.ServerUrl;
 
             switch (actionName)
             {
                 // ACCESS CONTROL //
                 case "login":
                     Console.WriteLine("Logging in...");
-                    if (options.ApiSecureKey.Equals(Guid.Empty))
+                    if (Options.ApiSecureKey.Equals(Guid.Empty))
                     { // Use password and username
-                        TryAction(delegate { return actions.Login(options.Username, options.Password, options.HeaderLogin); });
+                        TryAction(delegate { return Actions.Login(Options.Username, Options.Password, Options.HeaderLogin); });
                     }
                     else
                     { // Use secure key
-                        TryAction(delegate { return actions.Login(options.Username, options.ApiSecureKey, options.HeaderLogin); });
+                        TryAction(delegate { return Actions.Login(Options.Username, Options.ApiSecureKey, Options.HeaderLogin); });
                     }
                     break;
                 case "logout":
                     Console.WriteLine("Logging out...");
                     TryAction(delegate
-                    { actions.Logout(options.ApiToken); return "Logged out successfully"; });
+                    { Actions.Logout(Options.ApiToken); return "Logged out successfully"; });
                     break;
                 case "generate_api_key":
                     Console.WriteLine("Generating API key...");
-                    TryAction(delegate { return actions.GenerateAPIKey(options.ApiToken, options.Username, options.ForceNew); });
+                    TryAction(delegate { return Actions.GenerateAPIKey(Options.ApiToken, Options.Username, Options.ForceNew); });
                     break;
                 case "remove_api_key":
                     Console.WriteLine("Removing API key...");
                     TryAction(delegate
-                    { actions.RemoveAPIKey(options.ApiToken, options.ApiSecureKey); return "API Key removed successfully"; });
+                    { Actions.RemoveAPIKey(Options.ApiToken, Options.ApiSecureKey); return "API Key removed successfully"; });
                     break;
                 case "update_password":
                     Console.WriteLine("Updating password...");
                     TryAction(delegate
-                    { actions.UpdatePassword(options.ApiToken, options.NewPassword); return "Password updated successfully"; });
+                    { Actions.UpdatePassword(Options.ApiToken, Options.NewPassword); return "Password updated successfully"; });
                     break;
                 // JOB CONTROL //
                 case "create":
                     TryAction(delegate
                     {
                         Console.WriteLine("Creating job...");
-                        var jobId = actions.CreateJob(options.ApiToken, options.JobName, options.SourceLanguage).JobId;
+                        var jobId = Actions.CreateJob(Options.ApiToken, Options.JobName, Options.SourceLanguage).JobId;
                         Console.WriteLine("JobId: " + jobId);
                         Console.WriteLine("Adding media...");
-                        if (options.MediaFile == null)
+                        if (Options.MediaFile == null)
                         {
-                            Console.WriteLine("TaskId: " + actions.AddMediaToJob(options.ApiToken, jobId, options.MediaUrl).ToString("N"));
+                            Console.WriteLine("TaskId: " + Actions.AddMediaToJob(Options.ApiToken, jobId, Options.MediaUrl).ToString("N"));
                         }
                         else
                         {
-                            Console.WriteLine("TaskId: " + actions.AddMediaToJob(options.ApiToken, jobId, options.MediaFile).ToString("N"));
+                            Console.WriteLine("TaskId: " + Actions.AddMediaToJob(Options.ApiToken, jobId, Options.MediaFile).ToString("N"));
                         }
                         Console.WriteLine("Performing transcrition...");
                         var pto = new PerformTranscriptionOptions();
-                        pto.PopulateFromArray(options.JobConfig);
-                        return actions.PerformTranscription(options.ApiToken, jobId, options.Fidelity, options.Priority, options.CallbackUrl, options.TurnaroundHours, options.TargetLanguage, pto);
+                        pto.PopulateFromArray(Options.JobConfig);
+                        return Actions.PerformTranscription(Options.ApiToken, jobId, Options.Fidelity, Options.Priority, Options.CallbackUrl, Options.TurnaroundHours, Options.TargetLanguage, pto);
                     });
                     break;
                 case "authorize":
                     Console.WriteLine("Authorizing job...");
                     TryAction(delegate
-                    { actions.AuthorizeJob(options.ApiToken, options.JobId); return "Job Authorized Succesfully"; });
+                    { Actions.AuthorizeJob(Options.ApiToken, Options.JobId); return "Job Authorized Succesfully"; });
                     break;
                 case "delete":
                     Console.WriteLine("Deleting job...");
-                    TryAction(delegate { return actions.DeleteJob(options.ApiToken, options.JobId); });
+                    TryAction(delegate { return Actions.DeleteJob(Options.ApiToken, Options.JobId); });
                     break;
                 case "job_info":
                     Console.WriteLine("Getting job info...");
-                    TryAction(delegate { return actions.GetJobInfo(options.ApiToken, options.JobId); });
+                    TryAction(delegate { return Actions.GetJobInfo(Options.ApiToken, Options.JobId); });
                     break;
                 case "list":
                     Console.WriteLine("Listing jobs...");
-                    TryAction(delegate { return actions.GetJobList(options.ApiToken); });
+                    TryAction(delegate { return Actions.GetJobList(Options.ApiToken); });
                     break;
                 case "add_media_to_job":
                     Console.WriteLine("Ading media to job...");
-                    if (options.MediaUrl != null)
+                    if (Options.MediaUrl != null)
                     { // Media Url
-                        TryAction(delegate { return actions.AddMediaToJob(options.ApiToken, options.JobId, options.MediaUrl); });
+                        TryAction(delegate { return Actions.AddMediaToJob(Options.ApiToken, Options.JobId, Options.MediaUrl); });
                     }
                     else
                     { // Media File
-                        TryAction(delegate { return actions.AddMediaToJob(options.ApiToken, options.JobId, options.MediaFile); });
+                        TryAction(delegate { return Actions.AddMediaToJob(Options.ApiToken, Options.JobId, Options.MediaFile); });
                     }
                     break;
                 case "add_embedded_media_to_job":
                     Console.WriteLine("Adding embedded media to job...");
-                    TryAction(delegate { return actions.AddEmbeddedMediaToJob(options.ApiToken, options.JobId, options.MediaUrl); });
+                    TryAction(delegate { return Actions.AddEmbeddedMediaToJob(Options.ApiToken, Options.JobId, Options.MediaUrl); });
                     break;
                 case "get_media":
                     Console.WriteLine("Getting media...");
-                    TryAction(delegate { return actions.GetMedia(options.ApiToken, options.JobId); });
+                    TryAction(delegate { return Actions.GetMedia(Options.ApiToken, Options.JobId); });
                     break;
                 case "get_transcript":
                     Console.WriteLine("Getting transcript...");
                     var to = new TranscriptOptions();
-                    to.PopulateFromArray(options.CaptionOptions);
-                    TryAction(delegate { return actions.GetTranscript(options.ApiToken, options.JobId, to); });
+                    to.PopulateFromArray(Options.CaptionOptions);
+                    TryAction(delegate { return Actions.GetTranscript(Options.ApiToken, Options.JobId, to); });
                     break;
                 case "get_caption":
                     Console.WriteLine("Getting caption...");
                     var co = new CaptionOptions();
-                    co.PopulateFromArray(options.CaptionOptions);
-                    TryAction(delegate { return actions.GetCaption(options.ApiToken, options.JobId, options.CaptionFormat, co); });
+                    co.PopulateFromArray(Options.CaptionOptions);
+                    TryAction(delegate { return Actions.GetCaption(Options.ApiToken, Options.JobId, Options.CaptionFormat, co); });
                     break;
                 case "get_elementlist":
                     Console.WriteLine("Getting element list...");
-                    TryAction(delegate { return actions.GetElementList(options.ApiToken, options.JobId, options.ElementlistVersion); });
+                    TryAction(delegate { return Actions.GetElementList(Options.ApiToken, Options.JobId, Options.ElementlistVersion); });
                     break;
                 case "list_elementlists":
                     Console.WriteLine("Listing element lists...");
                     TryAction(delegate {
-                        return string.Join("\n", actions.GetListOfElementLists(options.ApiToken, options.JobId));
+                        return string.Join("\n", Actions.GetListOfElementLists(Options.ApiToken, Options.JobId));
                     });
                     break;
                 default:
-                    options.PrintDefaultUsage();
+                    Options.PrintDefaultUsage();
                     break;
             }
         }
@@ -189,24 +189,24 @@ namespace CommandLineTool
                 Console.WriteLine("\n" + e.Message);
                 Console.ResetColor();
 
-                options.PrintActionHelp(invokedVerb);
+                Options.PrintActionHelp(invokedVerb);
             }
         }
 
         private static bool TryLogin()
         {
-            actions.ServerUrl = options.ServerUrl;
-            if (options.ApiToken.Equals(Guid.Empty)) // Need to obtain api token
+            Actions.ServerUrl = Options.ServerUrl;
+            if (Options.ApiToken.Equals(Guid.Empty)) // Need to obtain api token
             {
                 try
                 {
-                    if (options.Password != null)
+                    if (Options.Password != null)
                     {
-                        options.ApiToken = actions.Login(options.Username, options.Password, true);
+                        Options.ApiToken = Actions.Login(Options.Username, Options.Password, true);
                     }
                     else
                     {
-                        options.ApiToken = actions.Login(options.Username, options.ApiSecureKey, true);
+                        Options.ApiToken = Actions.Login(Options.Username, Options.ApiSecureKey, true);
                     }
                 }
                 catch (Exception e)
@@ -214,7 +214,7 @@ namespace CommandLineTool
                     Console.ForegroundColor = ConsoleColor.Red;
                     Console.WriteLine("\n" + e.Message);
                     Console.ResetColor();
-                    options.PrintActionHelp(invokedVerb);
+                    Options.PrintActionHelp(invokedVerb);
                     return false;
                 }
             }

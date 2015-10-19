@@ -119,7 +119,7 @@ namespace Unit_Test_for_cielo24.NET_library
         public void TestPerformTranscriptionCallbackUrlEncoding()
         {
             var callbackUri = new Uri("http://fake-callback.com/action?api_token=1234&job_id={job_id}");
-            var encodedUri = "callback_url=http:%2F%2Ffake-callback.com%2Faction%3Fapi_token%3D1234%26job_id%3D{job_id}";
+            const string encodedUri = "callback_url=http:%2F%2Ffake-callback.com%2Faction%3Fapi_token%3D1234%26job_id%3D{job_id}";
             Actions.AddMediaToJob(ApiToken, JobId, Config.SampleVideoUri);
             TaskId = Actions.PerformTranscription(ApiToken, JobId, Fidelity.PREMIUM, Priority.STANDARD, callbackUri);
             // Last log entry will contain the callback to perform_transcription

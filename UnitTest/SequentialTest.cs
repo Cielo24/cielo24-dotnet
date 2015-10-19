@@ -79,7 +79,7 @@ namespace Unit_Test_for_cielo24.NET_library
             }
         }
 
-        private bool ContainsJob(Guid jobId, JobList list)
+        private static bool ContainsJob(Guid jobId, JobList list)
         {
             foreach(var j in list.ActiveJobs)
             {
