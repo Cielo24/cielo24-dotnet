@@ -247,11 +247,9 @@ namespace Cielo24
             {
                 return Fidelity.PREMIUM;
             }
-            if (readerValue.Equals("HIGH"))
-            {
-                return Fidelity.PROFESSIONAL;
-            }
-            return base.ReadJson(reader, objectType, existingValue, serializer);
+            return readerValue.Equals("HIGH")
+                ? Fidelity.PROFESSIONAL
+                : base.ReadJson(reader, objectType, existingValue, serializer);
         }
     }
 
@@ -261,19 +259,13 @@ namespace Cielo24
         {
             var type = value.GetType();
             var name = Enum.GetName(type, value);
-            if (name != null)
-            {
-                var field = type.GetField(name);
-                if (field != null)
-                {
-                    var desc = Attribute.GetCustomAttribute(field, typeof(DescriptionAttribute)) as DescriptionAttribute;
-                    if (desc != null)
-                    {
-                        return desc.Description;
-                    }
-                }
-            }
-            return value.ToString();
+            if (name == null)
+                return value.ToString();
+            var field = type.GetField(name);
+            if (field == null)
+                return value.ToString();
+            var desc = Attribute.GetCustomAttribute(field, typeof(DescriptionAttribute)) as DescriptionAttribute;
+            return desc != null ? desc.Description : value.ToString();
         }
     }
 }

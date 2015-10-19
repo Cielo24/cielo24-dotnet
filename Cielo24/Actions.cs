@@ -273,13 +273,10 @@ namespace Cielo24
 
             var requestUri = Utils.BuildUri(ServerUrl, GetCaptionPath, queryDictionary);
             var serverResponse = web.HttpRequest(requestUri, HttpMethod.Get, WebUtils.DownloadTimeout);
-            if (captionOptions != null && captionOptions.BuildUrl != null && captionOptions.BuildUrl.Equals(true))
-            {
-                var response = Utils.Deserialize<Dictionary<string, string>>(serverResponse);
-                return response["CaptionUrl"];
-            }
-
-            return serverResponse; // Caption text
+            if (captionOptions == null || captionOptions.BuildUrl == null || captionOptions.BuildUrl != true)
+                return serverResponse; // Caption text
+            var response = Utils.Deserialize<Dictionary<string, string>>(serverResponse);
+            return response["CaptionUrl"];
         }
 
         /* Returns an element list */

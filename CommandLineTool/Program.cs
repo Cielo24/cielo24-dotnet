@@ -196,27 +196,21 @@ namespace CommandLineTool
         private static bool TryLogin()
         {
             Actions.ServerUrl = Options.ServerUrl;
-            if (Options.ApiToken.Equals(Guid.Empty)) // Need to obtain api token
+            if (!Options.ApiToken.Equals(Guid.Empty))
+                return true;
+            try
             {
-                try
-                {
-                    if (Options.Password != null)
-                    {
-                        Options.ApiToken = Actions.Login(Options.Username, Options.Password, true);
-                    }
-                    else
-                    {
-                        Options.ApiToken = Actions.Login(Options.Username, Options.ApiSecureKey, true);
-                    }
-                }
-                catch (Exception e)
-                {
-                    Console.ForegroundColor = ConsoleColor.Red;
-                    Console.WriteLine("\n" + e.Message);
-                    Console.ResetColor();
-                    Options.PrintActionHelp(invokedVerb);
-                    return false;
-                }
+                Options.ApiToken = Options.Password != null 
+                    ? Actions.Login(Options.Username, Options.Password, true) 
+                    : Actions.Login(Options.Username, Options.ApiSecureKey, true);
+            }
+            catch (Exception e)
+            {
+                Console.ForegroundColor = ConsoleColor.Red;
+                Console.WriteLine("\n" + e.Message);
+                Console.ResetColor();
+                Options.PrintActionHelp(invokedVerb);
+                return false;
             }
             return true;
         }

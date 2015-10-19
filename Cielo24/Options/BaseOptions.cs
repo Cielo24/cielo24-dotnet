@@ -19,11 +19,10 @@ namespace Cielo24.Options
             foreach (var property in properties)
             {
                 var value = property.GetValue(this, null);
-                if (value != null) // If property is null, don't include the key-value pair in the dictioanary
-                {
-                    var key = (QueryName)property.GetCustomAttributes(typeof(QueryName), true).First();
-                    queryDictionary.Add(key.Name, GetStringValue(value));
-                }
+                if (value == null) // If property is null, don't include the key-value pair in the dictioanary
+                    continue;
+                var key = (QueryName)property.GetCustomAttributes(typeof(QueryName), true).First();
+                queryDictionary.Add(key.Name, GetStringValue(value));
             }
             return queryDictionary;
         }
@@ -43,11 +42,10 @@ namespace Cielo24.Options
             {
                 var key = (QueryName)property.GetCustomAttributes(typeof(QueryName), true).First();
                 var type = property.PropertyType;
-                if (key.Name.Equals(pair.Key))
-                {
-                    property.SetValue(this, GetValueFromString(pair.Value, type), null);
-                    return;
-                }
+                if (!key.Name.Equals(pair.Key))
+                    continue;
+                property.SetValue(this, GetValueFromString(pair.Value, type), null);
+                return;
             }
             throw new ArgumentException("Invalid Option: " + pair.Key);
         }
