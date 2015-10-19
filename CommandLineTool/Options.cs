@@ -167,8 +167,6 @@ namespace CommandLineTool
                     Console.WriteLine(Indent + "-l" + Gap + "The source language [en, es, de, fr] (en by default)");
                     Console.WriteLine(Indent + "-t" + Gap + "The target language [en, es, de, fr] (en by default)");
                     break;
-                default:
-                    break;
             }
         }
 

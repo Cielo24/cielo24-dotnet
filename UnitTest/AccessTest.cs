@@ -16,7 +16,7 @@ namespace Unit_Test_for_cielo24.NET_library
         public void TestLoginPasswordNoHeaders()
         {
             // Username, password, no headers
-            ApiToken = Actions.Login(Config.Username, Config.Password, false);
+            ApiToken = Actions.Login(Config.Username, Config.Password);
             Assert.AreEqual(32, ApiToken.ToString("N").Length);
         }
 
@@ -32,7 +32,7 @@ namespace Unit_Test_for_cielo24.NET_library
         public void TestLoginSecureKeyNoHeaders()
         {
             // Username, secure key, no headers
-            ApiToken = Actions.Login(Config.Username, SecureKey, false);
+            ApiToken = Actions.Login(Config.Username, SecureKey);
             Assert.AreEqual(32, ApiToken.ToString("N").Length);
         }
 
@@ -55,7 +55,7 @@ namespace Unit_Test_for_cielo24.NET_library
         [TestMethod]
         public void TestGenerateApiKey()
         {
-            SecureKey = Actions.GenerateAPIKey(ApiToken, Config.Username, false);
+            SecureKey = Actions.GenerateAPIKey(ApiToken, Config.Username);
             Assert.AreEqual(32, SecureKey.ToString("N").Length);
         }
 

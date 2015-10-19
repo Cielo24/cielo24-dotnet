@@ -56,25 +56,25 @@ namespace Unit_Test_for_cielo24.NET_library
         [TestMethod]
         public void TestGetJobInfo()
         {
-            var info = Actions.GetJobInfo(ApiToken, JobId);
+            Actions.GetJobInfo(ApiToken, JobId);
         }
 
         [TestMethod]
         public void TestGetJobList()
         {
-            var list = Actions.GetJobList(ApiToken);
+            Actions.GetJobList(ApiToken);
         }
 
         [TestMethod]
         public void TestGetElementList()
         {
-            var list = Actions.GetElementList(ApiToken, JobId);
+            Actions.GetElementList(ApiToken, JobId);
         }
 
         [TestMethod]
         public void TestGetListOfElementLists()
         {
-            var list = Actions.GetListOfElementLists(ApiToken, JobId);
+            Actions.GetListOfElementLists(ApiToken, JobId);
         }
 
         [TestMethod]
@@ -83,7 +83,7 @@ namespace Unit_Test_for_cielo24.NET_library
             // Add media to job first
             Actions.AddMediaToJob(ApiToken, JobId, Config.SampleVideoUri);
             // Test get media
-            var uri = Actions.GetMedia(ApiToken, JobId);
+            Actions.GetMedia(ApiToken, JobId);
         }
 
         [TestMethod]
@@ -103,7 +103,7 @@ namespace Unit_Test_for_cielo24.NET_library
         {
             var options = new CaptionOptions(buildUri:true);
             var response = Actions.GetCaption(ApiToken, JobId, CaptionFormat.SRT, options);
-            var uri = new Uri(response);
+            new Uri(response);
         }
 
         [TestMethod]
