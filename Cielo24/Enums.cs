@@ -1,8 +1,8 @@
-﻿using Newtonsoft.Json;
-using Newtonsoft.Json.Converters;
-using System;
+﻿using System;
 using System.ComponentModel;
 using System.Reflection;
+using Newtonsoft.Json;
+using Newtonsoft.Json.Converters;
 
 namespace Cielo24
 {
@@ -243,22 +243,16 @@ namespace Cielo24
             {
                 return base.ReadJson(reader, objectType, existingValue, serializer);
             }
-            else
+            string readerValue = reader.Value.ToString().ToUpper();
+            if (readerValue.Equals("STANDARD"))
             {
-                string readerValue = reader.Value.ToString().ToUpper();
-                if (readerValue.Equals("STANDARD"))
-                {
-                    return Fidelity.PREMIUM;
-                }
-                else if (readerValue.Equals("HIGH"))
-                {
-                    return Fidelity.PROFESSIONAL;
-                }
-                else
-                {
-                    return base.ReadJson(reader, objectType, existingValue, serializer);
-                }
+                return Fidelity.PREMIUM;
             }
+            if (readerValue.Equals("HIGH"))
+            {
+                return Fidelity.PROFESSIONAL;
+            }
+            return base.ReadJson(reader, objectType, existingValue, serializer);
         }
     }
 

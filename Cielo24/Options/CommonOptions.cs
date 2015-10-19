@@ -34,14 +34,14 @@ namespace Cielo24.Options
                              bool? replaceSlang = null,
                              char[] soundBoundaries = null)
         {
-            this.ElementListVersion = elementListVersion;
-            this.SpeakerChangeToken = speakerChangeToken;
-            this.MaskProfanity = maskProfanity;
-            this.RemoveDisfluences = removeDisfluencies;
-            this.RemoveSoundsList = removeSoundsList;
-            this.RemoveSoundReferences = removeSoundReferences;
-            this.ReplaceSlang = replaceSlang;
-            this.SoundBoundaries = soundBoundaries;
+            ElementListVersion = elementListVersion;
+            SpeakerChangeToken = speakerChangeToken;
+            MaskProfanity = maskProfanity;
+            RemoveDisfluences = removeDisfluencies;
+            RemoveSoundsList = removeSoundsList;
+            RemoveSoundReferences = removeSoundReferences;
+            ReplaceSlang = replaceSlang;
+            SoundBoundaries = soundBoundaries;
         }
     }
 }

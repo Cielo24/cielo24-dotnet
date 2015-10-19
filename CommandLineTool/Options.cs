@@ -1,8 +1,8 @@
 ﻿using System;
-using System.Linq;
-using CommandLine;
 using System.IO;
+using System.Linq;
 using Cielo24;
+using CommandLine;
 
 namespace CommandLineTool
 {
@@ -25,11 +25,11 @@ namespace CommandLineTool
         public string ServerUrl { get; set; }
 
         [Option('k', "key", HelpText = "API Secure Key", Required = false, DefaultValue = null)]
-        public string _ApiSecureKey { get { return this.ApiSecureKey.ToString("N"); } set { this.ApiSecureKey = Converters.StringToGuid(value, "API Secure Key"); } }
+        public string _ApiSecureKey { get { return ApiSecureKey.ToString("N"); } set { ApiSecureKey = Converters.StringToGuid(value, "API Secure Key"); } }
         public Guid ApiSecureKey { get; set; }
 
         [Option('N', "token", HelpText = "The API token of the current session", Required = false, DefaultValue = null)]
-        public string _ApiToken { get { return this.ApiToken.ToString("N"); } set { this.ApiToken = Converters.StringToGuid(value, "Api Token"); } }
+        public string _ApiToken { get { return ApiToken.ToString("N"); } set { ApiToken = Converters.StringToGuid(value, "Api Token"); } }
         public Guid ApiToken { get; set; }
 
         [Option('f', "fidelity", HelpText = "Fidelity [MECHANICAL, PREMIUM, PROFESSIONAL] (PREMIUM by default)", Required = false, DefaultValue = Fidelity.PREMIUM)]
@@ -39,11 +39,11 @@ namespace CommandLineTool
         public Priority Priority { get; set; }
 
         [Option('m', "url", HelpText = "Media URL", Required = false, DefaultValue = null)]
-        public string _MediaUrl { get { return this.MediaUrl.ToString(); } set { this.MediaUrl = Converters.StringToUri(value, "Media URL"); } }
+        public string _MediaUrl { get { return MediaUrl.ToString(); } set { MediaUrl = Converters.StringToUri(value, "Media URL"); } }
         public Uri MediaUrl { get; set; }
 
         [Option('M', "file", HelpText = "Local media file", Required = false, DefaultValue = null)]
-        public string _MediaFile { get { return this.MediaFile.ToString(); } set { this.MediaFile = Converters.StringToFileStream(value, "Media File"); } }
+        public string _MediaFile { get { return MediaFile.ToString(); } set { MediaFile = Converters.StringToFileStream(value, "Media File"); } }
         public FileStream MediaFile { get; set; }
 
         [Option('l', "source", HelpText = "The source language [en, es, de, fr] (en by default)", Required = false, DefaultValue = "en")]
@@ -53,7 +53,7 @@ namespace CommandLineTool
         public Language TargetLanguage { get; set; }
 
         [Option('j', "id", HelpText = "Job Id", Required = false, DefaultValue = null)]
-        public string _JobId { get { return this.JobId.ToString("N"); } set { this.JobId = Converters.StringToGuid(value, "Job Id"); } }
+        public string _JobId { get { return JobId.ToString("N"); } set { JobId = Converters.StringToGuid(value, "Job Id"); } }
         public Guid JobId { get; set; }
 
         [Option('T', "hours", HelpText = "Turnaround hours", Required = false, DefaultValue = null)]
@@ -66,11 +66,11 @@ namespace CommandLineTool
         public CaptionFormat CaptionFormat { get; set; }
 
         [Option('e', "el", HelpText = "The element list version [ISO Date format: 2014-05-06T10:49:38.341715]", Required = false, DefaultValue = null)]
-        public string _ElementListVersion { get { return this.ElementlistVersion.ToString(); } set { this.ElementlistVersion = Converters.StringToDateTime(value, "Elementlist Version"); } }
+        public string _ElementListVersion { get { return ElementlistVersion.ToString(); } set { ElementlistVersion = Converters.StringToDateTime(value, "Elementlist Version"); } }
         public DateTime? ElementlistVersion { get; set; }
 
         [Option('C', "callback", HelpText = "Callback URL for the job", Required = false, DefaultValue = null)]
-        public string _CallbackUrl { get { return this.CallbackUrl.ToString(); } set { this.CallbackUrl = Converters.StringToUri(value, "Callback URL"); } }
+        public string _CallbackUrl { get { return CallbackUrl.ToString(); } set { CallbackUrl = Converters.StringToUri(value, "Callback URL"); } }
         public Uri CallbackUrl { get; set; }
 
         [Option('S', "silent", HelpText = "Silent mode", Required = false, DefaultValue = false)]

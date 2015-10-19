@@ -1,9 +1,9 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Text;
-using System.Net;
-using System.IO;
 using System.Diagnostics;
+using System.IO;
+using System.Net;
+using System.Text;
 using NLog;
 
 namespace Cielo24
@@ -18,7 +18,7 @@ namespace Cielo24
         /* A synchronous method that performs an HTTP request returning data received from the sever as a string */
         public string HttpRequest(Uri uri, HttpMethod method, TimeSpan timeout, Dictionary<string, string> headers = null)
         {
-            logger.Info("Uri: " + uri.ToString());
+            logger.Info("Uri: " + uri);
             HttpWebRequest request = (HttpWebRequest)HttpWebRequest.Create(uri);
             request.Method = method.ToString();
             foreach (KeyValuePair<string, string> pair in headers ?? new Dictionary<string, string>())
@@ -32,10 +32,7 @@ namespace Cielo24
             {
                 return ReadResponse(request, asyncResult);
             }
-            else
-            {
-                throw new TimeoutException("The HTTP session has timed out.");
-            }
+            throw new TimeoutException("The HTTP session has timed out.");
         }
 
         /* Used exclusively by UpdatePassword method */
@@ -48,7 +45,7 @@ namespace Cielo24
         /* Uploads data in the body of HTTP request */
         public string UploadData(Uri uri, Stream inputStream, string contentType)
         {
-            Debug.WriteLine("Uri: " + uri.ToString());
+            Debug.WriteLine("Uri: " + uri);
             HttpWebRequest request = (HttpWebRequest)HttpWebRequest.Create(uri);
             request.Method = HttpMethod.POST.ToString();
             request.ContentType = contentType;
@@ -83,10 +80,7 @@ namespace Cielo24
             {
                 return ReadResponse(request, asyncResponse);
             }
-            else
-            {
-                throw new TimeoutException("The HTTP session has timed out.");
-            }
+            throw new TimeoutException("The HTTP session has timed out.");
         }
 
         /* Helper method */
@@ -117,12 +111,12 @@ namespace Cielo24
     public class EnumWebException : WebException
     {
         private string errorType;
-        public string ErrorType { get { return this.errorType; } }
+        public string ErrorType { get { return errorType; } }
 
         public EnumWebException(string errType, string message)
             : base(errType + ": " + message)
         {
-            this.errorType = errType;
+            errorType = errType;
         }
     }
 }

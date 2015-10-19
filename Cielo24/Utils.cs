@@ -32,7 +32,7 @@ namespace Cielo24
         /* Encodes the supplied Url into an escaped format */
         public static string EncodeUrl(Uri uri)
         {
-            return Utils.EncodeString(uri.ToString());
+            return EncodeString(uri.ToString());
         }
 
         /* Encodes the supplied string into an escaped format */
@@ -53,7 +53,7 @@ namespace Cielo24
             List<string> stringList = new List<string>();
             for (int i = 0; i < list.Count; i++)
             {
-                stringList.Add("\"" + list[i].ToString() + "\""); // Add quotation marks
+                stringList.Add("\"" + list[i] + "\""); // Add quotation marks
             }
             return "[" + String.Join(delimeter, stringList) + "]";
         }

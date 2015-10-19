@@ -44,13 +44,13 @@ namespace Cielo24.Options
                    replaceSlang,
                    soundBoundaries)
         {
-            this.CreateParagraphs = createParagraphs;
-            this.NewLinesAfterParagraph = newLinesAfterParagraph;
-            this.NewLinesAfterSentence = newLinesAfterSentence;
-            this.TimeCodeEveryParagraph = timecodeEveryParagraph;
-            this.TimeCodeFormat = timecodeFormat;
-            this.TimeCodeInterval = timecodeInterval;
-            this.TimeCodeOffset = timecodeOffset;
+            CreateParagraphs = createParagraphs;
+            NewLinesAfterParagraph = newLinesAfterParagraph;
+            NewLinesAfterSentence = newLinesAfterSentence;
+            TimeCodeEveryParagraph = timecodeEveryParagraph;
+            TimeCodeFormat = timecodeFormat;
+            TimeCodeInterval = timecodeInterval;
+            TimeCodeOffset = timecodeOffset;
         }
     }
 }

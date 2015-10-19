@@ -1,6 +1,6 @@
 ﻿using System;
-using Microsoft.VisualStudio.TestTools.UnitTesting;
 using Cielo24;
+using Microsoft.VisualStudio.TestTools.UnitTesting;
 using NLog;
 using NLog.Config;
 using NLog.Targets;
@@ -21,7 +21,7 @@ namespace UnitTest
         {
             // Make WebUtils log to Console as well as to Memory
             LoggingConfiguration logConf = new LoggingConfiguration();
-            this.memoryTarget = new MemoryTarget();
+            memoryTarget = new MemoryTarget();
             ConsoleTarget consoleTarget = new ConsoleTarget();
 
             logConf.AddTarget("MemoryTarget", memoryTarget);
@@ -36,15 +36,15 @@ namespace UnitTest
         [TestInitialize]
         public virtual void Initialize()
         {
-            this.EnableCustomLogger();
-            this.actions.ServerUrl = this.config.serverUrl;
-            if (this.apiToken.Equals(Guid.Empty))
+            EnableCustomLogger();
+            actions.ServerUrl = config.serverUrl;
+            if (apiToken.Equals(Guid.Empty))
             {
-                this.apiToken = this.actions.Login(this.config.username, this.config.password, true);
+                apiToken = actions.Login(config.username, config.password, true);
             }
-            if (this.secureKey.Equals(Guid.Empty))
+            if (secureKey.Equals(Guid.Empty))
             {
-                this.secureKey = this.actions.GenerateAPIKey(this.apiToken, this.config.username, true);
+                secureKey = actions.GenerateAPIKey(apiToken, config.username, true);
             }
         }
     }

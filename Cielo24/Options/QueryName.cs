@@ -9,7 +9,7 @@ namespace Cielo24.Options
 
         public QueryName(string name)
         {
-            this.Name = name;
+            Name = name;
         }
     }
 }

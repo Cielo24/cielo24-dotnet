@@ -1,6 +1,6 @@
 ﻿using System;
-using System.IO;
 using System.Collections.Generic;
+using System.IO;
 using Cielo24.JSON.ElementList;
 using Cielo24.JSON.Job;
 using Cielo24.Options;
@@ -12,7 +12,7 @@ namespace Cielo24
     {
         public const int VERSION = 1;
         private string BASE_URL = "https://api.cielo24.com";
-        public string ServerUrl { get { return this.BASE_URL; } set { this.BASE_URL = value; } }
+        public string ServerUrl { get { return BASE_URL; } set { BASE_URL = value; } }
         private WebUtils web = new WebUtils();
 
         private const string LOGIN_PATH = "/api/account/login";
@@ -38,7 +38,7 @@ namespace Cielo24
 
         public Actions(String uri)
         {
-            this.BASE_URL = uri;
+            BASE_URL = uri;
         }
 
         //////////////////////
@@ -48,8 +48,8 @@ namespace Cielo24
         /* Performs a Login action. If useHeaders is true, puts username and password into HTTP headers */
         public Guid Login(string username, string password, bool useHeaders = false)
         {
-            this.AssertArgument(username, "Username");
-            this.AssertArgument(password, "Password");
+            AssertArgument(username, "Username");
+            AssertArgument(password, "Password");
 
             Dictionary<string, string> queryDictionary = InitVersionDict();
             Dictionary<string, string> headers = new Dictionary<string, string>();
@@ -75,7 +75,7 @@ namespace Cielo24
         /* Performs a Login action. If useHeaders is true, puts securekey into HTTP headers */
         public Guid Login(string username, Guid securekey, bool useHeaders = false)
         {
-            this.AssertArgument(username, "Username");
+            AssertArgument(username, "Username");
 
             Dictionary<string, string> queryDictionary = InitVersionDict();
             Dictionary<string, string> headers = new Dictionary<string, string>();
@@ -101,7 +101,7 @@ namespace Cielo24
         /* Performs a Logout action */
         public void Logout(Guid apiToken)
         {
-            Dictionary<string, string> queryDictionary = this.InitAccessReqDict(apiToken);
+            Dictionary<string, string> queryDictionary = InitAccessReqDict(apiToken);
             Uri requestUri = Utils.BuildUri(BASE_URL, LOGOUT_PATH, queryDictionary);
             web.HttpRequest(requestUri, HttpMethod.GET, WebUtils.BASIC_TIMEOUT); // Nothing returned
         }
@@ -109,9 +109,9 @@ namespace Cielo24
         /* Updates password */
         public void UpdatePassword(Guid apiToken, string newPassword, string subAccount = null)
         {
-            this.AssertArgument(newPassword, "New Password");
+            AssertArgument(newPassword, "New Password");
 
-            Dictionary<string, string> queryDictionary = this.InitAccessReqDict(apiToken);
+            Dictionary<string, string> queryDictionary = InitAccessReqDict(apiToken);
             queryDictionary.Add("new_password", newPassword);
             if (subAccount != null) { queryDictionary.Add("username", subAccount); } // username parameter named sub_account for clarity
 
@@ -122,9 +122,9 @@ namespace Cielo24
         /* Returns a new Secure API key */
         public Guid GenerateAPIKey(Guid apiToken, string username, bool forceNew = false)
         {
-            this.AssertArgument(username, "Username");
+            AssertArgument(username, "Username");
 
-            Dictionary<string, string> queryDictionary = this.InitAccessReqDict(apiToken);
+            Dictionary<string, string> queryDictionary = InitAccessReqDict(apiToken);
             queryDictionary.Add("account_id", username);
             queryDictionary.Add("force_new", forceNew.ToString());
 
@@ -138,8 +138,8 @@ namespace Cielo24
         /* Deactivates the supplied Secure API key */
         public void RemoveAPIKey(Guid apiToken, Guid apiSecurekey)
         {
-            this.AssertArgument(apiSecurekey, "API Secure Key");
-            Dictionary<string, string> queryDictionary = this.InitAccessReqDict(apiToken);
+            AssertArgument(apiSecurekey, "API Secure Key");
+            Dictionary<string, string> queryDictionary = InitAccessReqDict(apiToken);
             queryDictionary.Add("api_securekey", apiSecurekey.ToString("N"));
 
             Uri requestUri = Utils.BuildUri(BASE_URL, REMOVE_API_KEY_PATH, queryDictionary);
@@ -153,7 +153,7 @@ namespace Cielo24
         /* Creates a new job. Returns an array of Guids where 'JobId' is the 0th element and 'TaskId' is the 1st element */
         public CreateJobResult CreateJob(Guid apiToken, string jobName = null, Language? language = Language.ENGLISH, string externalId = null, string subAccount = null)
         {
-            Dictionary<string, string> queryDictionary = this.InitAccessReqDict(apiToken);
+            Dictionary<string, string> queryDictionary = InitAccessReqDict(apiToken);
             if (jobName != null) { queryDictionary.Add("job_name", jobName); }
             if (language != null) { queryDictionary.Add("language", language.GetDescription()); }
             if (externalId != null) { queryDictionary.Add("external_id", externalId); }
@@ -201,7 +201,7 @@ namespace Cielo24
         /* Uploads a file from fileStream to job with jobId */
         public Guid AddMediaToJob(Guid apiToken, Guid jobId, Stream fileStream)
         {
-            this.AssertArgument(fileStream, "File");
+            AssertArgument(fileStream, "File");
 
             Dictionary<string, string> queryDictionary = InitJobReqDict(apiToken, jobId);
             Uri requestUri = Utils.BuildUri(BASE_URL, ADD_MEDIA_TO_JOB_PATH, queryDictionary);
@@ -307,7 +307,7 @@ namespace Cielo24
         /* Helper method for AddMediaToJob and AddEmbeddedMediaToJob methods */
         private Guid SendMediaUrl(Guid apiToken, Guid jobId, Uri mediaUrl, string path)
         {
-            this.AssertArgument(mediaUrl, "Media URL");
+            AssertArgument(mediaUrl, "Media URL");
 
             Dictionary<string, string> queryDictionary = InitJobReqDict(apiToken, jobId);
             queryDictionary.Add("media_url", mediaUrl.ToString());
@@ -330,8 +330,8 @@ namespace Cielo24
         /* Returns a dictionary with version, api_token and job_id key-value pairs (parameters used in almost every job-control action). */
         private Dictionary<string, string> InitJobReqDict(Guid apiToken, Guid jobId)
         {
-            this.AssertArgument(jobId, "Job Id");
-            Dictionary<string, string> queryDictionary = this.InitAccessReqDict(apiToken);
+            AssertArgument(jobId, "Job Id");
+            Dictionary<string, string> queryDictionary = InitAccessReqDict(apiToken);
             queryDictionary.Add("job_id", jobId.ToString("N"));
             return queryDictionary;
         }
@@ -339,7 +339,7 @@ namespace Cielo24
         /* Returns a dictionary with version and api_token key-value pairs (parameters used in almost every access-control action). */
         private Dictionary<string, string> InitAccessReqDict(Guid apiToken)
         {
-            this.AssertArgument(apiToken, "API Token");
+            AssertArgument(apiToken, "API Token");
             Dictionary<string, string> queryDictionary = InitVersionDict();
             queryDictionary.Add("api_token", apiToken.ToString("N"));
             return queryDictionary;

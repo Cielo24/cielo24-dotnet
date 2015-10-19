@@ -57,23 +57,23 @@ namespace Cielo24.Options
                               JobDifficulty? jobDifficulty = null,
                               string subAccount = null)
         {
-            this.CreateDateFrom = createDateFrom;
-            this.CreateDateTo = createDateTo;
-            this.StartDateFrom = startDateFrom;
-            this.StartDateTo = startDateTo;
-            this.DueDateFrom = dueDateFrom;
-            this.DueDateTo = dueDateTo;
-            this.CompleteDateFrom = completeDateFrom;
-            this.CompleteDateTo = completeDateTo;
-            this.JobStatus = jobStatus;
-            this.Fidelity = fidelity;
-            this.Priority = priority;
-            this.TurnaroundTimeHoursFrom = turnaroundTimeHoursFrom;
-            this.TurnaroundTimeHoursTo = turnaroundTimeHoursTo;
-            this.JobName = jobName;
-            this.ExternalId = externalId;
-            this.JobDifficulty = jobDifficulty;
-            this.SubAccount = subAccount;
+            CreateDateFrom = createDateFrom;
+            CreateDateTo = createDateTo;
+            StartDateFrom = startDateFrom;
+            StartDateTo = startDateTo;
+            DueDateFrom = dueDateFrom;
+            DueDateTo = dueDateTo;
+            CompleteDateFrom = completeDateFrom;
+            CompleteDateTo = completeDateTo;
+            JobStatus = jobStatus;
+            Fidelity = fidelity;
+            Priority = priority;
+            TurnaroundTimeHoursFrom = turnaroundTimeHoursFrom;
+            TurnaroundTimeHoursTo = turnaroundTimeHoursTo;
+            JobName = jobName;
+            ExternalId = externalId;
+            JobDifficulty = jobDifficulty;
+            SubAccount = subAccount;
         }
     }
 }

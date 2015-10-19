@@ -1,9 +1,9 @@
-﻿using Newtonsoft.Json;
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Reflection;
 using System.Text.RegularExpressions;
+using Newtonsoft.Json;
 
 namespace Cielo24.Options
 {
@@ -16,14 +16,14 @@ namespace Cielo24.Options
         public virtual Dictionary<string, string> GetDictionary()
         {
             Dictionary<string, string> queryDictionary = new Dictionary<string, string>();
-            PropertyInfo[] properties = this.GetType().GetProperties();
+            PropertyInfo[] properties = GetType().GetProperties();
             foreach (PropertyInfo property in properties)
             {
                 object value = property.GetValue(this, null);
                 if (value != null) // If property is null, don't include the key-value pair in the dictioanary
                 {
                     QueryName key = (QueryName)property.GetCustomAttributes(typeof(QueryName), true).First();
-                    queryDictionary.Add(key.Name, this.GetStringValue(value));
+                    queryDictionary.Add(key.Name, GetStringValue(value));
                 }
             }
             return queryDictionary;
@@ -32,21 +32,21 @@ namespace Cielo24.Options
         /* Returns a query string representation of options */
         public virtual string ToQuery()
         {
-            Dictionary<string, string> queryDictionary = this.GetDictionary();
+            Dictionary<string, string> queryDictionary = GetDictionary();
             return Utils.ToQuery(queryDictionary);
         }
 
         /* Sets the property whose QueryName attribute matches the key */
         public virtual void PopulateFromKeyValuePair(KeyValuePair<string, string> pair)
         {
-            PropertyInfo[] properties = this.GetType().GetProperties();
+            PropertyInfo[] properties = GetType().GetProperties();
             foreach (PropertyInfo property in properties)
             {
                 QueryName key = (QueryName)property.GetCustomAttributes(typeof(QueryName), true).First();
                 Type type = property.PropertyType;
                 if (key.Name.Equals(pair.Key))
                 {
-                    property.SetValue(this, this.GetValueFromString(pair.Value, type), null);
+                    property.SetValue(this, GetValueFromString(pair.Value, type), null);
                     return;
                 }
             }
@@ -59,7 +59,7 @@ namespace Cielo24.Options
             foreach (string s in array ?? new string[0])
             {
                 Dictionary<string, string> dictionary = Regex.Matches(s, "([^?=&]+)(=([^&]*))?").Cast<Match>().ToDictionary(x => x.Groups[1].Value, x => x.Groups[3].Value);
-                this.PopulateFromKeyValuePair(dictionary.First());
+                PopulateFromKeyValuePair(dictionary.First());
             }
         }
 
@@ -75,32 +75,30 @@ namespace Cielo24.Options
         {
             if (value is List<string>)
             {
-                return Utils.JoinQuoteList<string>((List<string>)value, ", ");
+                return Utils.JoinQuoteList((List<string>)value, ", ");
             }
-            else if (value is List<Tag>)
+            if (value is List<Tag>)
             {
-                return Utils.JoinQuoteList<Tag>((List<Tag>)value, ", ");
+                return Utils.JoinQuoteList((List<Tag>)value, ", ");
             }
-            else if (value is List<Fidelity>)
+            if (value is List<Fidelity>)
             {
-                return Utils.JoinQuoteList<Fidelity>((List<Fidelity>)value, ", ");
+                return Utils.JoinQuoteList((List<Fidelity>)value, ", ");
             }
-            else if (value is char[])       // char[] (returned as (a, b))
+            if (value is char[])       // char[] (returned as (a, b))
             {
                 return "(" + String.Join(", ", ((char[])value)) + ")";
             }
-            else if (value is DateTime)     // DateTime (in ISO 8601 format)
+            if (value is DateTime)     // DateTime (in ISO 8601 format)
             {
                 return Utils.DateToISOFormat((DateTime)value);
             }
-            else if (value is Enum)
+            if (value is Enum)
             {
                 return ((Enum)value).GetDescription();
             }
-            else                            // Takes care of the rest: int, bool, string, Uri
-            {
-                return value.ToString();
-            }
+            // Takes care of the rest: int, bool, string, Uri
+            return value.ToString();
         }
     }
 }

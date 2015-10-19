@@ -27,13 +27,13 @@ namespace Cielo24.Options
                                            List<Fidelity> returnIWP = null,
                                            bool? speakerId = null)
         {
-            this.CustomerApprovalSteps = customerApprovalStep;
-            this.CustomerApprovalTool = customerApprovalTool;
-            this.CustomMetadata = customMetadata;
-            this.GenerateMediaIntelligenceForIWP = generateMediaIntelligenceForIWP;
-            this.Notes = notes;
-            this.ReturnIWP = returnIWP;
-            this.SpeakerId = speakerId;
+            CustomerApprovalSteps = customerApprovalStep;
+            CustomerApprovalTool = customerApprovalTool;
+            CustomMetadata = customMetadata;
+            GenerateMediaIntelligenceForIWP = generateMediaIntelligenceForIWP;
+            Notes = notes;
+            ReturnIWP = returnIWP;
+            SpeakerId = speakerId;
         }
     }
 }

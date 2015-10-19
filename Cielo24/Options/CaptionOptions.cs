@@ -117,37 +117,37 @@ namespace Cielo24.Options
                    replaceSlang,
                    soundBoundaries)
         {
-            this.BuildUrl = buildUri;
-            this.CaptionWordsMin = captionWordsMin;
-            this.CaptionBySentence = captionBySentence;
-            this.CharactersPerCaptionLine = charactersPerCaptionLine;
-            this.DfxpHeader = dfxpHeader;
-            this.DisallowDangling = disallowDangling;
-            this.EffectsSpeaker = effectsSpeaker;
-            this.DisplayedSpeakerId = displaySpeakerId;
-            this.ForceCase = forceCase;
-            this.IncludeDfxpMetadata = includeDfxpMetadata;
-            this.LayoutTargetCaptionLengthMs = layoutDefaultCaptionLengthMs;
-            this.LineBreakOnSentence = lineBreakOnSentence;
-            this.LineEndingFormat = lineEndingFormat;
-            this.LinesPerCaption = linesPerCaption;
-            this.MaximumCaptionDuration = maximumCaptionDuration;
-            this.MergeGapInterval = mergeGapInterval;
-            this.MinimumCaptionLengthMs = minimumCaptionLengthMs;
-            this.MinimumGapBetweenCaptionsMs = minimumGapBetweenCaptionsMs;
-            this.MinimumMergeGapInterval = minimumMergeGapInterval;
-            this.QtSeamless = qtSeamless;
-            this.SilenceMaxMs = silenceMaxMs;
-            this.SingleSpeakerPerCaption = singleSpeakerPerCaption;
-            this.SoundThreshold = soundThreshold;
-            this.SoundTokensByCaption = soundTokensByCaption;
-            this.SoundTokensByLine = soundTokensByLine;
-            this.SoundTokensByCaptionList = soundTokensByCaptionList;
-            this.SoundTokensByLineList = soundTokensByLineList;
-            this.SpeakerOnNewLine = speakerOnNewLine;
-            this.SrtFormat = srtFormat;
-            this.StripSquareBrackets = stripSquareBrackets;
-            this.Utf8Mark = utf8_mark;
+            BuildUrl = buildUri;
+            CaptionWordsMin = captionWordsMin;
+            CaptionBySentence = captionBySentence;
+            CharactersPerCaptionLine = charactersPerCaptionLine;
+            DfxpHeader = dfxpHeader;
+            DisallowDangling = disallowDangling;
+            EffectsSpeaker = effectsSpeaker;
+            DisplayedSpeakerId = displaySpeakerId;
+            ForceCase = forceCase;
+            IncludeDfxpMetadata = includeDfxpMetadata;
+            LayoutTargetCaptionLengthMs = layoutDefaultCaptionLengthMs;
+            LineBreakOnSentence = lineBreakOnSentence;
+            LineEndingFormat = lineEndingFormat;
+            LinesPerCaption = linesPerCaption;
+            MaximumCaptionDuration = maximumCaptionDuration;
+            MergeGapInterval = mergeGapInterval;
+            MinimumCaptionLengthMs = minimumCaptionLengthMs;
+            MinimumGapBetweenCaptionsMs = minimumGapBetweenCaptionsMs;
+            MinimumMergeGapInterval = minimumMergeGapInterval;
+            QtSeamless = qtSeamless;
+            SilenceMaxMs = silenceMaxMs;
+            SingleSpeakerPerCaption = singleSpeakerPerCaption;
+            SoundThreshold = soundThreshold;
+            SoundTokensByCaption = soundTokensByCaption;
+            SoundTokensByLine = soundTokensByLine;
+            SoundTokensByCaptionList = soundTokensByCaptionList;
+            SoundTokensByLineList = soundTokensByLineList;
+            SpeakerOnNewLine = speakerOnNewLine;
+            SrtFormat = srtFormat;
+            StripSquareBrackets = stripSquareBrackets;
+            Utf8Mark = utf8_mark;
         }
     }
 }

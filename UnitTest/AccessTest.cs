@@ -1,5 +1,5 @@
-﻿using Microsoft.VisualStudio.TestTools.UnitTesting;
-using System;
+﻿using System;
+using Microsoft.VisualStudio.TestTools.UnitTesting;
 
 namespace UnitTest
 {
@@ -16,15 +16,15 @@ namespace UnitTest
         public void testLoginPasswordNoHeaders()
         {
             // Username, password, no headers
-            this.apiToken = this.actions.Login(this.config.username, this.config.password, false);
-            Assert.AreEqual(32, this.apiToken.ToString("N").Length);
+            apiToken = actions.Login(config.username, config.password, false);
+            Assert.AreEqual(32, apiToken.ToString("N").Length);
         }
 
         [TestMethod]
         public void testLoginPasswordHeaders()
         {
             // Username, password, headers
-            this.apiToken = this.actions.Login(this.config.username, this.config.password, true);
+            apiToken = actions.Login(config.username, config.password, true);
             Assert.AreEqual(32, apiToken.ToString("N").Length);
         }
 
@@ -32,15 +32,15 @@ namespace UnitTest
         public void testLoginSecureKeyNoHeaders()
         {
             // Username, secure key, no headers
-            this.apiToken = this.actions.Login(this.config.username, this.secureKey, false);
-            Assert.AreEqual(32, this.apiToken.ToString("N").Length);
+            apiToken = actions.Login(config.username, secureKey, false);
+            Assert.AreEqual(32, apiToken.ToString("N").Length);
         }
 
         [TestMethod]
         public void testLoginSecureKeyHeaders()
         {
             // Username, secure key, headers
-            this.apiToken = this.actions.Login(this.config.username, this.secureKey, true);
+            apiToken = actions.Login(config.username, secureKey, true);
             Assert.AreEqual(32, apiToken.ToString("N").Length);
         }
 
@@ -48,37 +48,37 @@ namespace UnitTest
         public void testLogout()
         {
             // Logout
-            this.actions.Logout(this.apiToken);
-            this.apiToken = Guid.Empty;
+            actions.Logout(apiToken);
+            apiToken = Guid.Empty;
         }
 
         [TestMethod]
         public void testGenerateApiKey()
         {
-            this.secureKey = this.actions.GenerateAPIKey(this.apiToken, this.config.username, false);
+            secureKey = actions.GenerateAPIKey(apiToken, config.username, false);
             Assert.AreEqual(32, secureKey.ToString("N").Length);
         }
 
         [TestMethod]
         public void testGenerateApiKeyForceNew()
         {
-            this.secureKey = this.actions.GenerateAPIKey(this.apiToken, this.config.username, true);
-            Assert.AreEqual(32, this.secureKey.ToString("N").Length);
-            this.actions.RemoveAPIKey(this.apiToken, this.secureKey);
+            secureKey = actions.GenerateAPIKey(apiToken, config.username, true);
+            Assert.AreEqual(32, secureKey.ToString("N").Length);
+            actions.RemoveAPIKey(apiToken, secureKey);
         }
 
         [TestMethod]
         public void testRemoveApiKey()
         {
-            this.actions.RemoveAPIKey(this.apiToken, this.secureKey);
-            this.secureKey = Guid.Empty;
+            actions.RemoveAPIKey(apiToken, secureKey);
+            secureKey = Guid.Empty;
         }
 
         [TestMethod]
         public void testUpdatePassword()
         {
-            this.actions.UpdatePassword(this.apiToken, this.config.newPassword);
-            this.actions.UpdatePassword(this.apiToken, this.config.password);
+            actions.UpdatePassword(apiToken, config.newPassword);
+            actions.UpdatePassword(apiToken, config.password);
         }
     }
 }
