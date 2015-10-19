@@ -5,28 +5,28 @@ using NLog;
 using NLog.Config;
 using NLog.Targets;
 
-namespace UnitTest
+namespace Unit_Test_for_cielo24.NET_library
 {
     [TestClass]
     public class ActionsTest
     {
-        protected Actions actions = new Actions();
-        protected Config config = new Config();
-        protected Guid apiToken = Guid.Empty;
-        protected Guid secureKey = Guid.Empty;
+        protected Actions Actions = new Actions();
+        protected Config Config = new Config();
+        protected Guid ApiToken = Guid.Empty;
+        protected Guid SecureKey = Guid.Empty;
         // Storing memoryTarget here, so that unittests can access it
-        protected MemoryTarget memoryTarget;
+        protected MemoryTarget MemoryTarget;
 
         private void EnableCustomLogger()
         {
             // Make WebUtils log to Console as well as to Memory
             var logConf = new LoggingConfiguration();
-            memoryTarget = new MemoryTarget();
+            MemoryTarget = new MemoryTarget();
             var consoleTarget = new ConsoleTarget();
 
-            logConf.AddTarget("MemoryTarget", memoryTarget);
+            logConf.AddTarget("MemoryTarget", MemoryTarget);
             logConf.AddTarget("ConsoleTarget", consoleTarget);
-            logConf.LoggingRules.Add(new LoggingRule("*", LogLevel.Info, memoryTarget));
+            logConf.LoggingRules.Add(new LoggingRule("*", LogLevel.Info, MemoryTarget));
             logConf.LoggingRules.Add(new LoggingRule("*", LogLevel.Info, consoleTarget));
 
             LogManager.Configuration = logConf;
@@ -37,14 +37,14 @@ namespace UnitTest
         public virtual void Initialize()
         {
             EnableCustomLogger();
-            actions.ServerUrl = config.serverUrl;
-            if (apiToken.Equals(Guid.Empty))
+            Actions.ServerUrl = Config.ServerUrl;
+            if (ApiToken.Equals(Guid.Empty))
             {
-                apiToken = actions.Login(config.username, config.password, true);
+                ApiToken = Actions.Login(Config.Username, Config.Password, true);
             }
-            if (secureKey.Equals(Guid.Empty))
+            if (SecureKey.Equals(Guid.Empty))
             {
-                secureKey = actions.GenerateAPIKey(apiToken, config.username, true);
+                SecureKey = Actions.GenerateAPIKey(ApiToken, Config.Username, true);
             }
         }
     }

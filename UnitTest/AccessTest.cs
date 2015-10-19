@@ -1,7 +1,7 @@
 ﻿using System;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 
-namespace UnitTest
+namespace Unit_Test_for_cielo24.NET_library
 {
     [TestClass]
     public class AccessTest : ActionsTest
@@ -13,72 +13,72 @@ namespace UnitTest
         }
 
         [TestMethod]
-        public void testLoginPasswordNoHeaders()
+        public void TestLoginPasswordNoHeaders()
         {
             // Username, password, no headers
-            apiToken = actions.Login(config.username, config.password, false);
-            Assert.AreEqual(32, apiToken.ToString("N").Length);
+            ApiToken = Actions.Login(Config.Username, Config.Password, false);
+            Assert.AreEqual(32, ApiToken.ToString("N").Length);
         }
 
         [TestMethod]
-        public void testLoginPasswordHeaders()
+        public void TestLoginPasswordHeaders()
         {
             // Username, password, headers
-            apiToken = actions.Login(config.username, config.password, true);
-            Assert.AreEqual(32, apiToken.ToString("N").Length);
+            ApiToken = Actions.Login(Config.Username, Config.Password, true);
+            Assert.AreEqual(32, ApiToken.ToString("N").Length);
         }
 
         [TestMethod]
-        public void testLoginSecureKeyNoHeaders()
+        public void TestLoginSecureKeyNoHeaders()
         {
             // Username, secure key, no headers
-            apiToken = actions.Login(config.username, secureKey, false);
-            Assert.AreEqual(32, apiToken.ToString("N").Length);
+            ApiToken = Actions.Login(Config.Username, SecureKey, false);
+            Assert.AreEqual(32, ApiToken.ToString("N").Length);
         }
 
         [TestMethod]
-        public void testLoginSecureKeyHeaders()
+        public void TestLoginSecureKeyHeaders()
         {
             // Username, secure key, headers
-            apiToken = actions.Login(config.username, secureKey, true);
-            Assert.AreEqual(32, apiToken.ToString("N").Length);
+            ApiToken = Actions.Login(Config.Username, SecureKey, true);
+            Assert.AreEqual(32, ApiToken.ToString("N").Length);
         }
 
         [TestMethod]
-        public void testLogout()
+        public void TestLogout()
         {
             // Logout
-            actions.Logout(apiToken);
-            apiToken = Guid.Empty;
+            Actions.Logout(ApiToken);
+            ApiToken = Guid.Empty;
         }
 
         [TestMethod]
-        public void testGenerateApiKey()
+        public void TestGenerateApiKey()
         {
-            secureKey = actions.GenerateAPIKey(apiToken, config.username, false);
-            Assert.AreEqual(32, secureKey.ToString("N").Length);
+            SecureKey = Actions.GenerateAPIKey(ApiToken, Config.Username, false);
+            Assert.AreEqual(32, SecureKey.ToString("N").Length);
         }
 
         [TestMethod]
-        public void testGenerateApiKeyForceNew()
+        public void TestGenerateApiKeyForceNew()
         {
-            secureKey = actions.GenerateAPIKey(apiToken, config.username, true);
-            Assert.AreEqual(32, secureKey.ToString("N").Length);
-            actions.RemoveAPIKey(apiToken, secureKey);
+            SecureKey = Actions.GenerateAPIKey(ApiToken, Config.Username, true);
+            Assert.AreEqual(32, SecureKey.ToString("N").Length);
+            Actions.RemoveAPIKey(ApiToken, SecureKey);
         }
 
         [TestMethod]
-        public void testRemoveApiKey()
+        public void TestRemoveApiKey()
         {
-            actions.RemoveAPIKey(apiToken, secureKey);
-            secureKey = Guid.Empty;
+            Actions.RemoveAPIKey(ApiToken, SecureKey);
+            SecureKey = Guid.Empty;
         }
 
         [TestMethod]
-        public void testUpdatePassword()
+        public void TestUpdatePassword()
         {
-            actions.UpdatePassword(apiToken, config.newPassword);
-            actions.UpdatePassword(apiToken, config.password);
+            Actions.UpdatePassword(ApiToken, Config.NewPassword);
+            Actions.UpdatePassword(ApiToken, Config.Password);
         }
     }
 }

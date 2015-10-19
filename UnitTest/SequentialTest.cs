@@ -3,74 +3,74 @@ using Cielo24;
 using Cielo24.JSON.Job;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 
-namespace UnitTest
+namespace Unit_Test_for_cielo24.NET_library
 {
     [TestClass]
     public class SequentialTest : ActionsTest
     {
-        protected Guid jobId = Guid.Empty;
+        protected Guid JobId = Guid.Empty;
 
         [TestInitialize]
         public override void Initialize()
         {
-            actions.ServerUrl = config.serverUrl;
+            Actions.ServerUrl = Config.ServerUrl;
             // Do nothing - we want to be able to control when we login/logout etc.
         }
 
         [TestMethod]
-        public void testSequence()
+        public void TestSequence()
         {
             // Login, generate API key, logout
-            apiToken = actions.Login(config.username, config.password);
-            secureKey = actions.GenerateAPIKey(apiToken, config.username, true);
-            actions.Logout(apiToken);
-            apiToken = Guid.Empty;
+            ApiToken = Actions.Login(Config.Username, Config.Password);
+            SecureKey = Actions.GenerateAPIKey(ApiToken, Config.Username, true);
+            Actions.Logout(ApiToken);
+            ApiToken = Guid.Empty;
 
             // Login using API key
-            apiToken = actions.Login(config.username, secureKey);
+            ApiToken = Actions.Login(Config.Username, SecureKey);
 
             // Create a job using a media URL
-            jobId = actions.CreateJob(apiToken, ".NET_test_job").JobId;
-            actions.AddMediaToJob(apiToken, jobId, config.sampleVideoUri);
+            JobId = Actions.CreateJob(ApiToken, ".NET_test_job").JobId;
+            Actions.AddMediaToJob(ApiToken, JobId, Config.SampleVideoUri);
 
             // Assert JobList and JobInfo data
-            var list = actions.GetJobList(apiToken);
-            Assert.IsTrue(containsJob(jobId, list), "JobId not found in JobList");
-            var job = actions.GetJobInfo(apiToken, jobId);
-            Assert.AreEqual(jobId, job.JobId, "Wrong JobId found in JobInfo");
+            var list = Actions.GetJobList(ApiToken);
+            Assert.IsTrue(ContainsJob(JobId, list), "JobId not found in JobList");
+            var job = Actions.GetJobInfo(ApiToken, JobId);
+            Assert.AreEqual(JobId, job.JobId, "Wrong JobId found in JobInfo");
 
             // Logout
-            actions.Logout(apiToken);
-            apiToken = Guid.Empty;
+            Actions.Logout(ApiToken);
+            ApiToken = Guid.Empty;
 
             // Login/logout/change password 
-            apiToken = actions.Login(config.username, config.password);
-            actions.UpdatePassword(apiToken, config.newPassword);
-            actions.Logout(apiToken);
-            apiToken = Guid.Empty;
+            ApiToken = Actions.Login(Config.Username, Config.Password);
+            Actions.UpdatePassword(ApiToken, Config.NewPassword);
+            Actions.Logout(ApiToken);
+            ApiToken = Guid.Empty;
 
             // Change password back
-            apiToken = actions.Login(config.username, config.newPassword);
-            actions.UpdatePassword(apiToken, config.password);
-            actions.Logout(apiToken);
-            apiToken = Guid.Empty;
+            ApiToken = Actions.Login(Config.Username, Config.NewPassword);
+            Actions.UpdatePassword(ApiToken, Config.Password);
+            Actions.Logout(ApiToken);
+            ApiToken = Guid.Empty;
 
             // Login using API key
-            apiToken = actions.Login(config.username, secureKey);
+            ApiToken = Actions.Login(Config.Username, SecureKey);
 
             // Delete job and assert JobList data
-            actions.DeleteJob(apiToken, jobId);
-            var list2 = actions.GetJobList(apiToken);
-            Assert.IsFalse(containsJob(jobId, list2), "JobId should not be in JobList");
+            Actions.DeleteJob(ApiToken, JobId);
+            var list2 = Actions.GetJobList(ApiToken);
+            Assert.IsFalse(ContainsJob(JobId, list2), "JobId should not be in JobList");
 
             // Delete current API key and try to re-login (should fail)
-            actions.RemoveAPIKey(apiToken, secureKey);
-            actions.Logout(apiToken);
-            apiToken = Guid.Empty;
+            Actions.RemoveAPIKey(ApiToken, SecureKey);
+            Actions.Logout(ApiToken);
+            ApiToken = Guid.Empty;
 
             try
             {
-                apiToken = actions.Login(config.username, secureKey);
+                ApiToken = Actions.Login(Config.Username, SecureKey);
                 Assert.Fail("Should not be able to login using invalid API key");
             }
             catch (EnumWebException e)
@@ -79,7 +79,7 @@ namespace UnitTest
             }
         }
 
-        private bool containsJob(Guid jobId, JobList list)
+        private bool ContainsJob(Guid jobId, JobList list)
         {
             foreach(var j in list.ActiveJobs)
             {

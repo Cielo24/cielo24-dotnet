@@ -8,6 +8,6 @@ namespace Cielo24.JSON.ElementList
         [JsonProperty("version")]
         public DateTime? Version { get; set; }
         [JsonProperty("iwp_name")]
-        public string IWPName { get; set; }
+        public string IwpName { get; set; }
     }
 }

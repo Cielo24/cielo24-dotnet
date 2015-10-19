@@ -15,7 +15,7 @@ namespace Cielo24.JSON.Job
         [JsonProperty("MediaLengthSeconds")]
         public float? MediaLengthSeconds { get; set; }
         [JsonProperty("ExternalID")]
-        public string ExternalID { get; set; }
+        public string ExternalId { get; set; }
         [JsonProperty("Priority")]
         public Priority? Priority { get; set; }
         [JsonProperty("Fidelity")]

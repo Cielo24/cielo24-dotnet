@@ -10,15 +10,15 @@ namespace Cielo24
 {
     public class WebUtils
     {
-        public static readonly TimeSpan BASIC_TIMEOUT = new TimeSpan(TimeSpan.TicksPerSecond * 60);    // 60 seconds
-        public static readonly TimeSpan DOWNLOAD_TIMEOUT = new TimeSpan(TimeSpan.TicksPerMinute * 5);  // 5 minutes
+        public static readonly TimeSpan BasicTimeout = new TimeSpan(TimeSpan.TicksPerSecond * 60);    // 60 seconds
+        public static readonly TimeSpan DownloadTimeout = new TimeSpan(TimeSpan.TicksPerMinute * 5);  // 5 minutes
         // Made public to allow users to redirect the logger output
-        public static Logger logger = LogManager.GetLogger("WebUtils");
+        public static Logger Logger = LogManager.GetLogger("WebUtils");
 
         /* A synchronous method that performs an HTTP request returning data received from the sever as a string */
         public string HttpRequest(Uri uri, HttpMethod method, TimeSpan timeout, Dictionary<string, string> headers = null)
         {
-            logger.Info("Uri: " + uri);
+            Logger.Info("Uri: " + uri);
             var request = (HttpWebRequest)HttpWebRequest.Create(uri);
             request.Method = method.ToString();
             foreach (var pair in headers ?? new Dictionary<string, string>())
@@ -47,13 +47,13 @@ namespace Cielo24
         {
             Debug.WriteLine("Uri: " + uri);
             var request = (HttpWebRequest)HttpWebRequest.Create(uri);
-            request.Method = HttpMethod.POST.ToString();
+            request.Method = HttpMethod.Post.ToString();
             request.ContentType = contentType;
             request.AllowWriteStreamBuffering = false;
             request.ContentLength = inputStream.Length;
 
             var asyncRequest = request.BeginGetRequestStream(null, null);
-            asyncRequest.AsyncWaitHandle.WaitOne(BASIC_TIMEOUT); // Wait untill stream is opened
+            asyncRequest.AsyncWaitHandle.WaitOne(BasicTimeout); // Wait untill stream is opened
             if (asyncRequest.IsCompleted)
             {
                 try
@@ -106,7 +106,7 @@ namespace Cielo24
         }
     }
 
-    public enum HttpMethod { GET, POST, DELETE, PUT }
+    public enum HttpMethod { Get, Post, Delete, Put }
 
     public class EnumWebException : WebException
     {

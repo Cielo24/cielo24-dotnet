@@ -91,7 +91,7 @@ namespace Cielo24.Options
             }
             if (value is DateTime)     // DateTime (in ISO 8601 format)
             {
-                return Utils.DateToISOFormat((DateTime)value);
+                return Utils.DateToIsoFormat((DateTime)value);
             }
             if (value is Enum)
             {

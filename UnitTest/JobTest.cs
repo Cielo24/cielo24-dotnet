@@ -1,31 +1,28 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using Cielo24;
-using Cielo24.JSON.ElementList;
-using Cielo24.JSON.Job;
 using Cielo24.Options;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 
-namespace UnitTest
+namespace Unit_Test_for_cielo24.NET_library
 {
     [TestClass]
     public class JobTest : ActionsTest
     {
-        protected Guid jobId = Guid.Empty;
-        protected Guid taskId = Guid.Empty;
+        protected Guid JobId = Guid.Empty;
+        protected Guid TaskId = Guid.Empty;
 
         [TestInitialize]
         public override void Initialize()
         {
             base.Initialize();
             // Always start with a fresh job
-            jobId = actions.CreateJob(apiToken).JobId;
+            JobId = Actions.CreateJob(ApiToken).JobId;
         }
 
         [TestMethod]
-        public void testOptions()
+        public void TestOptions()
         {
             var options = new CaptionOptions();
             options.CaptionBySentence = true;
@@ -36,119 +33,119 @@ namespace UnitTest
         }
 
         [TestMethod]
-        public void testCreateJob()
+        public void TestCreateJob()
         {
-            var result = actions.CreateJob(apiToken, "test_name", Language.ENGLISH);
+            var result = Actions.CreateJob(ApiToken, "test_name", Language.ENGLISH);
             Assert.AreEqual(32, result.JobId.ToString("N").Length);
             Assert.AreEqual(32, result.TaskId.ToString("N").Length);
         }
 
         [TestMethod]
-        public void testAuthorizeJob()
+        public void TestAuthorizeJob()
         {
-            actions.AuthorizeJob(apiToken, jobId);
+            Actions.AuthorizeJob(ApiToken, JobId);
         }
 
         [TestMethod]
-        public void testDeleteJob()
+        public void TestDeleteJob()
         {
-            taskId = actions.DeleteJob(apiToken, jobId);
-            Assert.AreEqual(32, taskId.ToString("N").Length);
+            TaskId = Actions.DeleteJob(ApiToken, JobId);
+            Assert.AreEqual(32, TaskId.ToString("N").Length);
         }
 
         [TestMethod]
-        public void testGetJobInfo()
+        public void TestGetJobInfo()
         {
-            var info = actions.GetJobInfo(apiToken, jobId);
+            var info = Actions.GetJobInfo(ApiToken, JobId);
         }
 
         [TestMethod]
-        public void testGetJobList()
+        public void TestGetJobList()
         {
-            var list = actions.GetJobList(apiToken);
+            var list = Actions.GetJobList(ApiToken);
         }
 
         [TestMethod]
-        public void testGetElementList()
+        public void TestGetElementList()
         {
-            var list = actions.GetElementList(apiToken, jobId);
+            var list = Actions.GetElementList(ApiToken, JobId);
         }
 
         [TestMethod]
-        public void testGetListOfElementLists()
+        public void TestGetListOfElementLists()
         {
-            var list = actions.GetListOfElementLists(apiToken, jobId);
+            var list = Actions.GetListOfElementLists(ApiToken, JobId);
         }
 
         [TestMethod]
-        public void testGetMedia()
+        public void TestGetMedia()
         {
             // Add media to job first
-            actions.AddMediaToJob(apiToken, jobId, config.sampleVideoUri);
+            Actions.AddMediaToJob(ApiToken, JobId, Config.SampleVideoUri);
             // Test get media
-            var uri = actions.GetMedia(apiToken, jobId);
+            var uri = Actions.GetMedia(ApiToken, JobId);
         }
 
         [TestMethod]
-        public void testGetTranscript()
+        public void TestGetTranscript()
         {
-            actions.GetTranscript(apiToken, jobId);
+            Actions.GetTranscript(ApiToken, JobId);
         }
 
         [TestMethod]
-        public void testGetCaption()
+        public void TestGetCaption()
         {
-            actions.GetCaption(apiToken, jobId, CaptionFormat.SRT);
+            Actions.GetCaption(ApiToken, JobId, CaptionFormat.SRT);
         }
 
         [TestMethod]
-        public void testGetCaptionBuildUrl()
+        public void TestGetCaptionBuildUrl()
         {
             var options = new CaptionOptions(buildUri:true);
-            var response = actions.GetCaption(apiToken, jobId, CaptionFormat.SRT, options);
+            var response = Actions.GetCaption(ApiToken, JobId, CaptionFormat.SRT, options);
             var uri = new Uri(response);
         }
 
         [TestMethod]
-        public void testPerformTranscription()
+        public void TestPerformTranscription()
         {
-            actions.AddMediaToJob(apiToken, jobId, config.sampleVideoUri);
-            var callback_uri = new Uri("http://fake-callback.com/action?api_token=1234&job_id={job_id}");
-            taskId = actions.PerformTranscription(apiToken, jobId, Fidelity.PREMIUM, Priority.STANDARD, callback_uri);
-            Assert.AreEqual(32, taskId.ToString("N").Length);
+            Actions.AddMediaToJob(ApiToken, JobId, Config.SampleVideoUri);
+            var callbackUri = new Uri("http://fake-callback.com/action?api_token=1234&job_id={job_id}");
+            TaskId = Actions.PerformTranscription(ApiToken, JobId, Fidelity.PREMIUM, Priority.STANDARD, callbackUri);
+            Assert.AreEqual(32, TaskId.ToString("N").Length);
         }
 
         [TestMethod]
-        public void testPerformTranscriptionCallbackUrlEncoding()
+        public void TestPerformTranscriptionCallbackUrlEncoding()
         {
             var callbackUri = new Uri("http://fake-callback.com/action?api_token=1234&job_id={job_id}");
             var encodedUri = "callback_url=http:%2F%2Ffake-callback.com%2Faction%3Fapi_token%3D1234%26job_id%3D{job_id}";
-            actions.AddMediaToJob(apiToken, jobId, config.sampleVideoUri);
-            taskId = actions.PerformTranscription(apiToken, jobId, Fidelity.PREMIUM, Priority.STANDARD, callbackUri);
+            Actions.AddMediaToJob(ApiToken, JobId, Config.SampleVideoUri);
+            TaskId = Actions.PerformTranscription(ApiToken, JobId, Fidelity.PREMIUM, Priority.STANDARD, callbackUri);
             // Last log entry will contain the callback to perform_transcription
-            Assert.IsTrue(memoryTarget.Logs.Last().Contains(encodedUri));
+            Assert.IsTrue(MemoryTarget.Logs.Last().Contains(encodedUri));
         }
 
         [TestMethod]
-        public void testAddMediaToJobUrl()
+        public void TestAddMediaToJobUrl()
         {
-            taskId = actions.AddMediaToJob(apiToken, jobId, config.sampleVideoUri);
-            Assert.AreEqual(32, taskId.ToString("N").Length);
+            TaskId = Actions.AddMediaToJob(ApiToken, JobId, Config.SampleVideoUri);
+            Assert.AreEqual(32, TaskId.ToString("N").Length);
         }
 
         [TestMethod]
-        public void testAddMediaToJobEmbedded()
+        public void TestAddMediaToJobEmbedded()
         {
-            taskId = actions.AddEmbeddedMediaToJob(apiToken, jobId, config.sampleVideoUri);
-            Assert.AreEqual(32, taskId.ToString("N").Length);
+            TaskId = Actions.AddEmbeddedMediaToJob(ApiToken, JobId, Config.SampleVideoUri);
+            Assert.AreEqual(32, TaskId.ToString("N").Length);
         }
 
         [TestMethod]
-        public void testAddMediaToJobFile()
+        public void TestAddMediaToJobFile()
         {
-            var fs = new FileStream(config.sampleVideoFilePath, FileMode.Open);
-            taskId = actions.AddMediaToJob(apiToken, jobId, fs);
-            Assert.AreEqual(32, taskId.ToString("N").Length);
+            var fs = new FileStream(Config.SampleVideoFilePath, FileMode.Open);
+            TaskId = Actions.AddMediaToJob(ApiToken, JobId, fs);
+            Assert.AreEqual(32, TaskId.ToString("N").Length);
         }
     }
 }

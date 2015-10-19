@@ -10,35 +10,35 @@ namespace Cielo24
 {
     public class Actions
     {
-        public const int VERSION = 1;
-        private string BASE_URL = "https://api.cielo24.com";
-        public string ServerUrl { get { return BASE_URL; } set { BASE_URL = value; } }
+        public const int Version = 1;
+        private string baseUrl = "https://api.cielo24.com";
+        public string ServerUrl { get { return baseUrl; } set { baseUrl = value; } }
         private WebUtils web = new WebUtils();
 
-        private const string LOGIN_PATH = "/api/account/login";
-        private const string LOGOUT_PATH = "/api/account/logout";
-        private const string UPDATE_PASSWORD_PATH = "/api/account/update_password";
-        private const string GENERATE_API_KEY_PATH = "/api/account/generate_api_key";
-        private const string REMOVE_API_KEY_PATH = "/api/account/remove_api_key";
-        private const string CREATE_JOB_PATH = "/api/job/new";
-        private const string AUTHORIZE_JOB_PATH = "/api/job/authorize";
-        private const string DELETE_JOB_PATH = "/api/job/del";
-        private const string GET_JOB_INFO_PATH = "/api/job/info";
-        private const string GET_JOB_LIST_PATH = "/api/job/list";
-        private const string ADD_MEDIA_TO_JOB_PATH = "/api/job/add_media";
-        private const string ADD_EMBEDDED_MEDIA_TO_JOB_PATH = "/api/job/add_media_url";
-        private const string GET_MEDIA_PATH = "/api/job/media";
-        private const string PERFORM_TRANSCRIPTION = "/api/job/perform_transcription";
-        private const string GET_TRANSCRIPT_PATH = "/api/job/get_transcript";
-        private const string GET_CAPTION_PATH = "/api/job/get_caption";
-        private const string GET_ELEMENT_LIST_PATH = "/api/job/get_elementlist";
-        private const string GET_LIST_OF_ELEMENT_LISTS_PATH = "/api/job/list_elementlists";
+        private const string LoginPath = "/api/account/login";
+        private const string LogoutPath = "/api/account/logout";
+        private const string UpdatePasswordPath = "/api/account/update_password";
+        private const string GenerateApiKeyPath = "/api/account/generate_api_key";
+        private const string RemoveApiKeyPath = "/api/account/remove_api_key";
+        private const string CreateJobPath = "/api/job/new";
+        private const string AuthorizeJobPath = "/api/job/authorize";
+        private const string DeleteJobPath = "/api/job/del";
+        private const string GetJobInfoPath = "/api/job/info";
+        private const string GetJobListPath = "/api/job/list";
+        private const string AddMediaToJobPath = "/api/job/add_media";
+        private const string AddEmbeddedMediaToJobPath = "/api/job/add_media_url";
+        private const string GetMediaPath = "/api/job/media";
+        private const string PerformTranscriptionPath = "/api/job/perform_transcription";
+        private const string GetTranscriptPath = "/api/job/get_transcript";
+        private const string GetCaptionPath = "/api/job/get_caption";
+        private const string GetElementListPath = "/api/job/get_elementlist";
+        private const string GetListOfElementListsPath = "/api/job/list_elementlists";
 
         public Actions() { }
 
         public Actions(string uri)
         {
-            BASE_URL = uri;
+            baseUrl = uri;
         }
 
         //////////////////////
@@ -65,8 +65,8 @@ namespace Cielo24
                 queryDictionary.Add("password", password);
             }
 
-            var requestUri = Utils.BuildUri(BASE_URL, LOGIN_PATH, queryDictionary);
-            var serverResponse = web.HttpRequest(requestUri, HttpMethod.GET, WebUtils.BASIC_TIMEOUT, headers);
+            var requestUri = Utils.BuildUri(baseUrl, LoginPath, queryDictionary);
+            var serverResponse = web.HttpRequest(requestUri, HttpMethod.Get, WebUtils.BasicTimeout, headers);
             var response = Utils.Deserialize<Dictionary<string, string>>(serverResponse);
 
             return new Guid(response["ApiToken"]);
@@ -91,8 +91,8 @@ namespace Cielo24
                 queryDictionary.Add("securekey", securekey.ToString("N"));
             }
 
-            var requestUri = Utils.BuildUri(BASE_URL, LOGIN_PATH, queryDictionary);
-            var serverResponse = web.HttpRequest(requestUri, HttpMethod.GET, WebUtils.BASIC_TIMEOUT, headers);
+            var requestUri = Utils.BuildUri(baseUrl, LoginPath, queryDictionary);
+            var serverResponse = web.HttpRequest(requestUri, HttpMethod.Get, WebUtils.BasicTimeout, headers);
             var response = Utils.Deserialize<Dictionary<string, string>>(serverResponse);
 
             return new Guid(response["ApiToken"]);
@@ -102,8 +102,8 @@ namespace Cielo24
         public void Logout(Guid apiToken)
         {
             var queryDictionary = InitAccessReqDict(apiToken);
-            var requestUri = Utils.BuildUri(BASE_URL, LOGOUT_PATH, queryDictionary);
-            web.HttpRequest(requestUri, HttpMethod.GET, WebUtils.BASIC_TIMEOUT); // Nothing returned
+            var requestUri = Utils.BuildUri(baseUrl, LogoutPath, queryDictionary);
+            web.HttpRequest(requestUri, HttpMethod.Get, WebUtils.BasicTimeout); // Nothing returned
         }
 
         /* Updates password */
@@ -115,12 +115,12 @@ namespace Cielo24
             queryDictionary.Add("new_password", newPassword);
             if (subAccount != null) { queryDictionary.Add("username", subAccount); } // username parameter named sub_account for clarity
 
-            var requestUri = Utils.BuildUri(BASE_URL, UPDATE_PASSWORD_PATH, queryDictionary);
-            web.HttpRequest(requestUri, HttpMethod.POST, WebUtils.BASIC_TIMEOUT, Utils.ToQuery(queryDictionary)); // Nothing returned
+            var requestUri = Utils.BuildUri(baseUrl, UpdatePasswordPath, queryDictionary);
+            web.HttpRequest(requestUri, HttpMethod.Post, WebUtils.BasicTimeout, Utils.ToQuery(queryDictionary)); // Nothing returned
         }
 
         /* Returns a new Secure API key */
-        public Guid GenerateAPIKey(Guid apiToken, string username, bool forceNew = false)
+        public Guid GenerateApiKey(Guid apiToken, string username, bool forceNew = false)
         {
             AssertArgument(username, "Username");
 
@@ -128,22 +128,22 @@ namespace Cielo24
             queryDictionary.Add("account_id", username);
             queryDictionary.Add("force_new", forceNew.ToString());
 
-            var requestUri = Utils.BuildUri(BASE_URL, GENERATE_API_KEY_PATH, queryDictionary);
-            var serverResponse = web.HttpRequest(requestUri, HttpMethod.GET, WebUtils.BASIC_TIMEOUT);
+            var requestUri = Utils.BuildUri(baseUrl, GenerateApiKeyPath, queryDictionary);
+            var serverResponse = web.HttpRequest(requestUri, HttpMethod.Get, WebUtils.BasicTimeout);
             var response = Utils.Deserialize<Dictionary<string, string>>(serverResponse);
 
             return new Guid(response["ApiKey"]);
         }
 
         /* Deactivates the supplied Secure API key */
-        public void RemoveAPIKey(Guid apiToken, Guid apiSecurekey)
+        public void RemoveApiKey(Guid apiToken, Guid apiSecurekey)
         {
             AssertArgument(apiSecurekey, "API Secure Key");
             var queryDictionary = InitAccessReqDict(apiToken);
             queryDictionary.Add("api_securekey", apiSecurekey.ToString("N"));
 
-            var requestUri = Utils.BuildUri(BASE_URL, REMOVE_API_KEY_PATH, queryDictionary);
-            web.HttpRequest(requestUri, HttpMethod.GET, WebUtils.BASIC_TIMEOUT); // Nothing returned
+            var requestUri = Utils.BuildUri(baseUrl, RemoveApiKeyPath, queryDictionary);
+            web.HttpRequest(requestUri, HttpMethod.Get, WebUtils.BasicTimeout); // Nothing returned
         }
 
         ///////////////////
@@ -159,8 +159,8 @@ namespace Cielo24
             if (externalId != null) { queryDictionary.Add("external_id", externalId); }
             if (subAccount != null) { queryDictionary.Add("username", subAccount); } // username parameter named sub_account for clarity
 
-            var requestUri = Utils.BuildUri(BASE_URL, CREATE_JOB_PATH, queryDictionary);
-            var serverResponse = web.HttpRequest(requestUri, HttpMethod.GET, WebUtils.BASIC_TIMEOUT);
+            var requestUri = Utils.BuildUri(baseUrl, CreateJobPath, queryDictionary);
+            var serverResponse = web.HttpRequest(requestUri, HttpMethod.Get, WebUtils.BasicTimeout);
             return Utils.Deserialize<CreateJobResult>(serverResponse);
         }
 
@@ -168,21 +168,21 @@ namespace Cielo24
         public void AuthorizeJob(Guid apiToken, Guid jobId)
         {
             var queryDictionary = InitJobReqDict(apiToken, jobId);
-            var requestUri = Utils.BuildUri(BASE_URL, AUTHORIZE_JOB_PATH, queryDictionary);
-            web.HttpRequest(requestUri, HttpMethod.GET, WebUtils.BASIC_TIMEOUT); // Nothing returned
+            var requestUri = Utils.BuildUri(baseUrl, AuthorizeJobPath, queryDictionary);
+            web.HttpRequest(requestUri, HttpMethod.Get, WebUtils.BasicTimeout); // Nothing returned
         }
 
         /* Deletes a job with jobId */
         public Guid DeleteJob(Guid apiToken, Guid jobId)
         {
-            var response = GetJobResponse<Dictionary<string, string>>(apiToken, jobId, DELETE_JOB_PATH);
+            var response = GetJobResponse<Dictionary<string, string>>(apiToken, jobId, DeleteJobPath);
             return new Guid(response["TaskId"]);
         }
 
         /* Gets information about a job with jobId */
         public Job GetJobInfo(Guid apiToken, Guid jobId)
         {
-            return GetJobResponse<Job>(apiToken, jobId, GET_JOB_INFO_PATH);
+            return GetJobResponse<Job>(apiToken, jobId, GetJobInfoPath);
         }
 
         /* Gets a list of jobs */
@@ -191,8 +191,8 @@ namespace Cielo24
             var queryDictionary = InitAccessReqDict(apiToken);
             if (options != null) { queryDictionary = Utils.DictConcat(queryDictionary, options.GetDictionary()); }
 
-            var requestUri = Utils.BuildUri(BASE_URL, GET_JOB_LIST_PATH, queryDictionary);
-            var serverResponse = web.HttpRequest(requestUri, HttpMethod.GET, WebUtils.BASIC_TIMEOUT);
+            var requestUri = Utils.BuildUri(baseUrl, GetJobListPath, queryDictionary);
+            var serverResponse = web.HttpRequest(requestUri, HttpMethod.Get, WebUtils.BasicTimeout);
             var jobList = Utils.Deserialize<JobList>(serverResponse);
 
             return jobList;
@@ -204,7 +204,7 @@ namespace Cielo24
             AssertArgument(fileStream, "File");
 
             var queryDictionary = InitJobReqDict(apiToken, jobId);
-            var requestUri = Utils.BuildUri(BASE_URL, ADD_MEDIA_TO_JOB_PATH, queryDictionary);
+            var requestUri = Utils.BuildUri(baseUrl, AddMediaToJobPath, queryDictionary);
             var serverResponse = web.UploadData(requestUri, fileStream, "video/mp4");
             var response = Utils.Deserialize<Dictionary<string, string>>(serverResponse);
 
@@ -214,19 +214,19 @@ namespace Cielo24
         /* Provides job with jobId a url to media */
         public Guid AddMediaToJob(Guid apiToken, Guid jobId, Uri mediaUrl)
         {
-            return SendMediaUrl(apiToken, jobId, mediaUrl, ADD_MEDIA_TO_JOB_PATH);
+            return SendMediaUrl(apiToken, jobId, mediaUrl, AddMediaToJobPath);
         }
 
         /* Provides job with jobId a url to media */
         public Guid AddEmbeddedMediaToJob(Guid apiToken, Guid jobId, Uri mediaUrl)
         {
-            return SendMediaUrl(apiToken, jobId, mediaUrl, ADD_EMBEDDED_MEDIA_TO_JOB_PATH);
+            return SendMediaUrl(apiToken, jobId, mediaUrl, AddEmbeddedMediaToJobPath);
         }
 
         /* Returns a Uri to the media from job with jobId */
         public Uri GetMedia(Guid apiToken, Guid jobId)
         {
-            var response = GetJobResponse<Dictionary<string, string>>(apiToken, jobId, GET_MEDIA_PATH);
+            var response = GetJobResponse<Dictionary<string, string>>(apiToken, jobId, GetMediaPath);
             return new Uri(response["MediaUrl"]);
         }
 
@@ -248,8 +248,8 @@ namespace Cielo24
             if (targetLanguage != null) { queryDictionary.Add("target_language", targetLanguage.GetDescription()); }
             if (options != null) { queryDictionary.Add("options", JsonConvert.SerializeObject(options.GetDictionary())); }
 
-            var requestUri = Utils.BuildUri(BASE_URL, PERFORM_TRANSCRIPTION, queryDictionary);
-            var serverResponse = web.HttpRequest(requestUri, HttpMethod.GET, WebUtils.BASIC_TIMEOUT);
+            var requestUri = Utils.BuildUri(baseUrl, PerformTranscriptionPath, queryDictionary);
+            var serverResponse = web.HttpRequest(requestUri, HttpMethod.Get, WebUtils.BasicTimeout);
             var response = Utils.Deserialize<Dictionary<string, string>>(serverResponse);
 
             return new Guid(response["TaskId"]);
@@ -261,8 +261,8 @@ namespace Cielo24
             var queryDictionary = InitJobReqDict(apiToken, jobId);
             if (transcriptOptions != null) { queryDictionary = Utils.DictConcat(queryDictionary, transcriptOptions.GetDictionary()); }
 
-            var requestUri = Utils.BuildUri(BASE_URL, GET_TRANSCRIPT_PATH, queryDictionary);
-            return web.HttpRequest(requestUri, HttpMethod.GET, WebUtils.DOWNLOAD_TIMEOUT); // Transcript text
+            var requestUri = Utils.BuildUri(baseUrl, GetTranscriptPath, queryDictionary);
+            return web.HttpRequest(requestUri, HttpMethod.Get, WebUtils.DownloadTimeout); // Transcript text
         }
 
         /* Returns a caption from a job with jobId OR if buildUri is true, returns a string representation of the uri */
@@ -272,8 +272,8 @@ namespace Cielo24
             queryDictionary.Add("caption_format", captionFormat.GetDescription());
             if (captionOptions != null) { queryDictionary = Utils.DictConcat(queryDictionary, captionOptions.GetDictionary()); }
 
-            var requestUri = Utils.BuildUri(BASE_URL, GET_CAPTION_PATH, queryDictionary);
-            var serverResponse = web.HttpRequest(requestUri, HttpMethod.GET, WebUtils.DOWNLOAD_TIMEOUT);
+            var requestUri = Utils.BuildUri(baseUrl, GetCaptionPath, queryDictionary);
+            var serverResponse = web.HttpRequest(requestUri, HttpMethod.Get, WebUtils.DownloadTimeout);
             if (captionOptions != null && captionOptions.BuildUrl != null && captionOptions.BuildUrl.Equals(true))
             {
                 var response = Utils.Deserialize<Dictionary<string, string>>(serverResponse);
@@ -287,17 +287,17 @@ namespace Cielo24
         public ElementList GetElementList(Guid apiToken, Guid jobId, DateTime? elementListVersion = null)
         {
             var queryDictionary = InitJobReqDict(apiToken, jobId);
-            if (elementListVersion != null) { queryDictionary.Add("elementlist_version", Utils.DateToISOFormat(elementListVersion)); }
+            if (elementListVersion != null) { queryDictionary.Add("elementlist_version", Utils.DateToIsoFormat(elementListVersion)); }
 
-            var requestUri = Utils.BuildUri(BASE_URL, GET_ELEMENT_LIST_PATH, queryDictionary);
-            var serverResponse = web.HttpRequest(requestUri, HttpMethod.GET, WebUtils.DOWNLOAD_TIMEOUT);
+            var requestUri = Utils.BuildUri(baseUrl, GetElementListPath, queryDictionary);
+            var serverResponse = web.HttpRequest(requestUri, HttpMethod.Get, WebUtils.DownloadTimeout);
             return Utils.Deserialize<ElementList>(serverResponse);
         }
 
         /* Returns a list of elements lists */
         public List<ElementListVersion> GetListOfElementLists(Guid apiToken, Guid jobId)
         {
-            return GetJobResponse<List<ElementListVersion>>(apiToken, jobId, GET_LIST_OF_ELEMENT_LISTS_PATH);
+            return GetJobResponse<List<ElementListVersion>>(apiToken, jobId, GetListOfElementListsPath);
         }
 
         //////////////////////////////
@@ -312,8 +312,8 @@ namespace Cielo24
             var queryDictionary = InitJobReqDict(apiToken, jobId);
             queryDictionary.Add("media_url", mediaUrl.ToString());
 
-            var requestUri = Utils.BuildUri(BASE_URL, path, queryDictionary);
-            var serverResponse = web.HttpRequest(requestUri, HttpMethod.GET, WebUtils.BASIC_TIMEOUT);
+            var requestUri = Utils.BuildUri(baseUrl, path, queryDictionary);
+            var serverResponse = web.HttpRequest(requestUri, HttpMethod.Get, WebUtils.BasicTimeout);
             var response = Utils.Deserialize<Dictionary<string, string>>(serverResponse);
 
             return new Guid(response["TaskId"]);
@@ -322,8 +322,8 @@ namespace Cielo24
         private T GetJobResponse<T>(Guid apiToken, Guid jobId, string path)
         {
             var queryDictionary = InitJobReqDict(apiToken, jobId);
-            var requestUri = Utils.BuildUri(BASE_URL, path, queryDictionary);
-            var serverResponse = web.HttpRequest(requestUri, HttpMethod.GET, WebUtils.BASIC_TIMEOUT);
+            var requestUri = Utils.BuildUri(baseUrl, path, queryDictionary);
+            var serverResponse = web.HttpRequest(requestUri, HttpMethod.Get, WebUtils.BasicTimeout);
             return Utils.Deserialize<T>(serverResponse);
         }
 
@@ -349,7 +349,7 @@ namespace Cielo24
         private Dictionary<string, string> InitVersionDict()
         {
             var queryDictionary = new Dictionary<string, string>();
-            queryDictionary.Add("v", VERSION.ToString());
+            queryDictionary.Add("v", Version.ToString());
             return queryDictionary;
         }
 

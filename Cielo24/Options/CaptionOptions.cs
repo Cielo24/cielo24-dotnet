@@ -107,7 +107,7 @@ namespace Cielo24.Options
             bool? speakerOnNewLine = null,
             string srtFormat = null,
             bool? stripSquareBrackets = null,
-            bool? utf8_mark = null)
+            bool? utf8Mark = null)
             : base(elementListVersion,
                    speakerChangeToken,
                    maskProfanity,
@@ -147,7 +147,7 @@ namespace Cielo24.Options
             SpeakerOnNewLine = speakerOnNewLine;
             SrtFormat = srtFormat;
             StripSquareBrackets = stripSquareBrackets;
-            Utf8Mark = utf8_mark;
+            Utf8Mark = utf8Mark;
         }
     }
 }

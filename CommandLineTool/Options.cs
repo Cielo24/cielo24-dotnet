@@ -8,8 +8,8 @@ namespace CommandLineTool
 {
     public class Options
     {
-        protected string indent = "   ";
-        protected string gap = "     ";
+        protected string Indent = "   ";
+        protected string Gap = "     ";
         public static readonly string[] Verbs = { "login", "logout", "create", "delete", "authorize", "add_media_to_job", "add_embedded_media_to_job", "list", "list_elementlists", "get_caption", "get_transcript", "get_elementlist", "get_media", "generate_api_key", "remove_api_key", "update_password", "job_info" };
 
         [Option('h', "help", HelpText = "cielo24 username", Required = false, DefaultValue = null)]
@@ -101,71 +101,71 @@ namespace CommandLineTool
             if (!Verbs.Contains(action)) { return; }
 
             Console.WriteLine("\nREQUIRED FOR \"" + action + "\" ACTION:");
-            string[] job_id_param = { "delete", "authorize", "list_elementlists", "get_elementlist", "get_media", "job_info", "add_media_to_job", "add_embedded_media_to_job", "get_transcript", "get_caption" };
-            if (job_id_param.Contains(action))
+            string[] jobIdParam = { "delete", "authorize", "list_elementlists", "get_elementlist", "get_media", "job_info", "add_media_to_job", "add_embedded_media_to_job", "get_transcript", "get_caption" };
+            if (jobIdParam.Contains(action))
             {
-                Console.WriteLine(indent + "-j" + gap + "Job Id");
+                Console.WriteLine(Indent + "-j" + Gap + "Job Id");
             }
             switch (action)
             {
                 case "add_media_to_job":
                     //"$job_id_param" "$media_url_param" "or" "$media_file_param"
-                    Console.WriteLine(indent + "-m" + gap + "Media URL");
+                    Console.WriteLine(Indent + "-m" + Gap + "Media URL");
                     Console.WriteLine("or");
-                    Console.WriteLine(indent + "-M" + gap + "Local Media File");
+                    Console.WriteLine(Indent + "-M" + Gap + "Local Media File");
                     break;
                 case "add_embedded_media_to_job":
-                    Console.WriteLine(indent + "-m" + gap + "Media URL");
+                    Console.WriteLine(Indent + "-m" + Gap + "Media URL");
                     break;
                 case "list":
-                    Console.WriteLine(indent + "none");
+                    Console.WriteLine(Indent + "none");
                     break;
                 case "get_caption":
                 case "get_transcript":
-                    Console.WriteLine(indent + "-c" + gap + "The caption format [SRT, DFXP, QT] (SRT by default)");
+                    Console.WriteLine(Indent + "-c" + Gap + "The caption format [SRT, DFXP, QT] (SRT by default)");
                     Console.WriteLine("\nOPTIONAL:");
-                    Console.WriteLine(indent + "-e" + gap + "The element list version [ISO Date format: 2014-05-06T10:49:38.341715]");
-                    Console.WriteLine(indent + "-O" + gap + "Caption/transcript options query string arguments. Usage: -O key1=value1 -O key2=value2. See API documentation for details");
+                    Console.WriteLine(Indent + "-e" + Gap + "The element list version [ISO Date format: 2014-05-06T10:49:38.341715]");
+                    Console.WriteLine(Indent + "-O" + Gap + "Caption/transcript options query string arguments. Usage: -O key1=value1 -O key2=value2. See API documentation for details");
                     break;
                 case "get_elementlist":
-                    Console.WriteLine(indent + "-e" + gap + "ElementList Version");
+                    Console.WriteLine(Indent + "-e" + Gap + "ElementList Version");
                     break;
                 case "generate_api_key":
                     Console.WriteLine("\nOPTIONAL:");
-                    Console.WriteLine(indent + "-F" + gap + "Always force new API key (disabled by default)");
+                    Console.WriteLine(Indent + "-F" + Gap + "Always force new API key (disabled by default)");
                     break;
                 case "remove_api_key":
-                    Console.WriteLine(indent + "-k" + gap + "API Secure Key");
+                    Console.WriteLine(Indent + "-k" + Gap + "API Secure Key");
                     break;
                 case "update_password":
-                    Console.WriteLine(indent + "-d" + gap + "New password");
+                    Console.WriteLine(Indent + "-d" + Gap + "New password");
                     break;
                 case "logout":
-                    Console.WriteLine(indent + "-N" + gap + "API token for the current session");
+                    Console.WriteLine(Indent + "-N" + Gap + "API token for the current session");
                     break;
                 case "login":
-                    Console.WriteLine(indent + "-u" + gap + "cielo24 username");
-                    Console.WriteLine(indent + "-p" + gap + "cielo24 password");
+                    Console.WriteLine(Indent + "-u" + Gap + "cielo24 username");
+                    Console.WriteLine(Indent + "-p" + Gap + "cielo24 password");
                     Console.WriteLine("or");
-                    Console.WriteLine(indent + "-k" + gap + "API secure key");
+                    Console.WriteLine(Indent + "-k" + Gap + "API secure key");
                     Console.WriteLine("or");
-                    Console.WriteLine(indent + "-N" + gap + "API token of the current session");
+                    Console.WriteLine(Indent + "-N" + Gap + "API token of the current session");
                     Console.WriteLine("\nOPTIONAL:");
-                    Console.WriteLine(indent + "-H" + gap + "Use headers");
+                    Console.WriteLine(Indent + "-H" + Gap + "Use headers");
                     break;
                 case "create":
-                    Console.WriteLine(indent + "-f" + gap + "Fidelity [MECHANICAL, PREMIUM, PROFESSIONAL]");
-                    Console.WriteLine(indent + "-P" + gap + "Priority [ECONOMY, STANDARD, HIGH]");
-                    Console.WriteLine(indent + "-M" + gap + "Local Media File");
+                    Console.WriteLine(Indent + "-f" + Gap + "Fidelity [MECHANICAL, PREMIUM, PROFESSIONAL]");
+                    Console.WriteLine(Indent + "-P" + Gap + "Priority [ECONOMY, STANDARD, HIGH]");
+                    Console.WriteLine(Indent + "-M" + Gap + "Local Media File");
                     Console.WriteLine("or");
-                    Console.WriteLine(indent + "-m" + gap + "Media URL");
+                    Console.WriteLine(Indent + "-m" + Gap + "Media URL");
                     Console.WriteLine("\nOPTIONAL:");
-                    Console.WriteLine(indent + "-n" + gap + "Job Name");
-                    Console.WriteLine(indent + "-J" + gap + "Job options dictionary. Usage: -O key1=value1 -O key2=value2. See API documentation for details");
-                    Console.WriteLine(indent + "-C" + gap + "Callback URL for the job");
-                    Console.WriteLine(indent + "-T" + gap + "Turnaround hours");
-                    Console.WriteLine(indent + "-l" + gap + "The source language [en, es, de, fr] (en by default)");
-                    Console.WriteLine(indent + "-t" + gap + "The target language [en, es, de, fr] (en by default)");
+                    Console.WriteLine(Indent + "-n" + Gap + "Job Name");
+                    Console.WriteLine(Indent + "-J" + Gap + "Job options dictionary. Usage: -O key1=value1 -O key2=value2. See API documentation for details");
+                    Console.WriteLine(Indent + "-C" + Gap + "Callback URL for the job");
+                    Console.WriteLine(Indent + "-T" + Gap + "Turnaround hours");
+                    Console.WriteLine(Indent + "-l" + Gap + "The source language [en, es, de, fr] (en by default)");
+                    Console.WriteLine(Indent + "-t" + Gap + "The target language [en, es, de, fr] (en by default)");
                     break;
                 default:
                     break;
@@ -179,15 +179,15 @@ namespace CommandLineTool
             Console.WriteLine("\nExecutes a cielo24 API call");
             Console.WriteLine("\nALWAYS REQUIRED:");
             Console.WriteLine("--------------------------");
-            Console.WriteLine(indent + "-u" + gap + "cielo24 username");
-            Console.WriteLine(indent + "-p" + gap + "cielo24 password");
+            Console.WriteLine(Indent + "-u" + Gap + "cielo24 username");
+            Console.WriteLine(Indent + "-p" + Gap + "cielo24 password");
             Console.WriteLine("or");
-            Console.WriteLine(indent + "-k" + gap + "API secure key");
+            Console.WriteLine(Indent + "-k" + Gap + "API secure key");
             Console.WriteLine("or");
-            Console.WriteLine(indent + "-N" + gap + "API token of the current session");
+            Console.WriteLine(Indent + "-N" + Gap + "API token of the current session");
             Console.WriteLine("--------------------------");
             Console.WriteLine("\nOPTIONAL:");
-            Console.WriteLine(indent + "-s" + gap + "cielo24 server URL [https://api.cielo24.com]");
+            Console.WriteLine(Indent + "-s" + Gap + "cielo24 server URL [https://api.cielo24.com]");
         }
     }
 
