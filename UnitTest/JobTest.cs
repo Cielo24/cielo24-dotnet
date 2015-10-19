@@ -24,9 +24,11 @@ namespace Unit_Test_for_cielo24.NET_library
         [TestMethod]
         public void TestOptions()
         {
-            var options = new CaptionOptions();
-            options.CaptionBySentence = true;
-            options.ForceCase = Case.UPPER;
+            var options = new CaptionOptions
+            {
+                CaptionBySentence = true,
+                ForceCase = Case.UPPER
+            };
             string[] array = { "build_url=true", "dfxp_header=header" };
             options.PopulateFromArray(array);
             Assert.AreEqual("build_url=true&caption_by_sentence=true&dfxp_header=header&force_case=upper", options.ToQuery().ToLower());
