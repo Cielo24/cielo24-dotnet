@@ -2,7 +2,6 @@
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using Cielo24.JSON.Job;
 using Cielo24;
-using Cielo24.JSON;
 
 namespace UnitTest
 {

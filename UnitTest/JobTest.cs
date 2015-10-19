@@ -1,5 +1,4 @@
 ﻿using Cielo24;
-using Cielo24.JSON;
 using Cielo24.JSON.ElementList;
 using Cielo24.JSON.Job;
 using Cielo24.Options;
@@ -8,8 +7,6 @@ using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace UnitTest
 {

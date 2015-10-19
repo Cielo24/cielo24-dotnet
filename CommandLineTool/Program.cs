@@ -1,12 +1,7 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.Linq;
-using System.Text;
 using Cielo24;
 using CommandLine;
-using CommandLine.Text;
-using Cielo24.JSON;
-using System.Net;
 using System.Diagnostics;
 using Cielo24.Options;
 

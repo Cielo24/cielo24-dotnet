@@ -1,12 +1,6 @@
 ﻿using System;
 using System.IO;
-using System.Net;
-using System.Linq;
-using System.Text;
-using System.Diagnostics;
-using System.Security.Principal;
 using System.Collections.Generic;
-using Cielo24.JSON;
 using Cielo24.JSON.ElementList;
 using Cielo24.JSON.Job;
 using Cielo24.Options;

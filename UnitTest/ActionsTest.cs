@@ -1,12 +1,9 @@
 ﻿using System;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using Cielo24;
-using Cielo24.JSON;
 using NLog;
 using NLog.Config;
 using NLog.Targets;
-using System.Collections.Generic;
-using System.IO;
 
 namespace UnitTest
 {

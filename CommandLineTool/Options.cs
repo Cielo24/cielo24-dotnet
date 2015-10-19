@@ -1,12 +1,7 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.Linq;
-using System.Text;
 using CommandLine;
-using CommandLine.Text;
-using System.ComponentModel;
 using System.IO;
-using Cielo24.JSON;
 using Cielo24;
 
 namespace CommandLineTool

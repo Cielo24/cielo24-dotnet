@@ -1,8 +1,5 @@
-﻿using Cielo24.JSON;
-using System;
+﻿using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Text;
 
 namespace Cielo24.Options
 {
