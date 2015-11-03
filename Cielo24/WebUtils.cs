@@ -16,7 +16,14 @@ namespace Cielo24
         public static Logger Logger = LogManager.GetLogger("WebUtils");
 
         /* A synchronous method that performs an HTTP request returning data received from the sever as a string */
+
         public string HttpRequest(Uri uri, HttpMethod method, TimeSpan timeout, Dictionary<string, string> headers = null)
+        {
+            return HttpRequest(uri.AbsoluteUri, method, timeout, headers);
+        }
+
+        /* A synchronous method that performs an HTTP request returning data received from the sever as a string */
+        public string HttpRequest(string uri, HttpMethod method, TimeSpan timeout, Dictionary<string, string> headers = null)
         {
             Logger.Info("Uri: " + uri);
             var request = (HttpWebRequest) WebRequest.Create(uri);

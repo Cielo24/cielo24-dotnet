@@ -55,22 +55,22 @@ namespace Unit_Test_for_cielo24.NET_library
         [TestMethod]
         public void TestGenerateApiKey()
         {
-            SecureKey = Actions.GenerateAPIKey(ApiToken, Config.Username);
+            SecureKey = Actions.GenerateApiKey(ApiToken, Config.Username);
             Assert.AreEqual(32, SecureKey.ToString("N").Length);
         }
 
         [TestMethod]
         public void TestGenerateApiKeyForceNew()
         {
-            SecureKey = Actions.GenerateAPIKey(ApiToken, Config.Username, true);
+            SecureKey = Actions.GenerateApiKey(ApiToken, Config.Username, true);
             Assert.AreEqual(32, SecureKey.ToString("N").Length);
-            Actions.RemoveAPIKey(ApiToken, SecureKey);
+            Actions.RemoveApiKey(ApiToken, SecureKey);
         }
 
         [TestMethod]
         public void TestRemoveApiKey()
         {
-            Actions.RemoveAPIKey(ApiToken, SecureKey);
+            Actions.RemoveApiKey(ApiToken, SecureKey);
             SecureKey = Guid.Empty;
         }
 

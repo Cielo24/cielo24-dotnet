@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using Cielo24;
@@ -148,6 +149,14 @@ namespace Unit_Test_for_cielo24.NET_library
             var fs = new FileStream(Config.SampleVideoFilePath, FileMode.Open);
             TaskId = Actions.AddMediaToJob(ApiToken, JobId, fs);
             Assert.AreEqual(32, TaskId.ToString("N").Length);
+        }
+
+        [TestMethod]
+        public void testAggregateStatistics()
+        {
+            var metrics = new List<string> {"billable_minutes_total", "billable_minutes_professional"};
+            var result = Actions.AggregateStatistics(ApiToken, metrics, "month", new DateTime(2015, 6, 25), new DateTime(2015, 7, 25), "*");
+            Assert.IsNotNull(result);
         }
     }
 }

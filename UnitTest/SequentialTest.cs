@@ -23,7 +23,7 @@ namespace Unit_Test_for_cielo24.NET_library
         {
             // Login, generate API key, logout
             ApiToken = Actions.Login(Config.Username, Config.Password);
-            SecureKey = Actions.GenerateAPIKey(ApiToken, Config.Username, true);
+            SecureKey = Actions.GenerateApiKey(ApiToken, Config.Username, true);
             Actions.Logout(ApiToken);
             ApiToken = Guid.Empty;
 
@@ -65,7 +65,7 @@ namespace Unit_Test_for_cielo24.NET_library
             Assert.IsFalse(ContainsJob(JobId, list2), "JobId should not be in JobList");
 
             // Delete current API key and try to re-login (should fail)
-            Actions.RemoveAPIKey(ApiToken, SecureKey);
+            Actions.RemoveApiKey(ApiToken, SecureKey);
             Actions.Logout(ApiToken);
             ApiToken = Guid.Empty;
 

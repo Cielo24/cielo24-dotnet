@@ -32,6 +32,7 @@ namespace Cielo24
         private const string GetCaptionPath = "/api/job/get_caption";
         private const string GetElementListPath = "/api/job/get_elementlist";
         private const string GetListOfElementListsPath = "/api/job/list_elementlists";
+        private const string AggregateStatisticsPath = "/api/job/aggregate_statistics";
 
         public Actions() { }
 
@@ -294,6 +295,32 @@ namespace Cielo24
         public List<ElementListVersion> GetListOfElementLists(Guid apiToken, Guid jobId)
         {
             return GetJobResponse<List<ElementListVersion>>(apiToken, jobId, GetListOfElementListsPath);
+        }
+
+        /* Return aggregate statistics */
+        public Dictionary<string, object> AggregateStatistics(Guid apiToken, List<string> metrics,
+            string groupBy, DateTime? startDate, DateTime? endDate, string subAccount)
+        {
+            var queryDictionary = InitAccessReqDict(apiToken);
+
+            if (metrics != null)
+                queryDictionary.Add("metrics", Utils.JoinQuoteList(metrics, ","));
+
+            if (!string.IsNullOrEmpty(groupBy))
+                queryDictionary.Add("group_by", groupBy);
+
+            if (startDate != null)
+                queryDictionary.Add("start_date", Utils.DateToIsoFormat(startDate));
+
+            if (endDate != null)
+                queryDictionary.Add("end_date", Utils.DateToIsoFormat(endDate));
+
+            if (!string.IsNullOrEmpty(subAccount))
+                queryDictionary.Add("account_id", subAccount);
+
+            var requestUri = Utils.BuildUriRawString(ServerUrl, AggregateStatisticsPath, queryDictionary);
+            var serverResponse = web.HttpRequest(requestUri, HttpMethod.Get, WebUtils.BasicTimeout);
+            return Utils.Deserialize<Dictionary<string, object>>(serverResponse);
         }
 
         //////////////////////////////

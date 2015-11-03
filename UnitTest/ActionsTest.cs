@@ -30,7 +30,7 @@ namespace Unit_Test_for_cielo24.NET_library
             logConf.LoggingRules.Add(new LoggingRule("*", LogLevel.Info, consoleTarget));
 
             LogManager.Configuration = logConf;
-            WebUtils.logger = LogManager.GetLogger("TestLogger");
+            WebUtils.Logger = LogManager.GetLogger("TestLogger");
         }
 
         [TestInitialize]
@@ -44,7 +44,7 @@ namespace Unit_Test_for_cielo24.NET_library
             }
             if (SecureKey.Equals(Guid.Empty))
             {
-                SecureKey = Actions.GenerateAPIKey(ApiToken, Config.Username, true);
+                SecureKey = Actions.GenerateApiKey(ApiToken, Config.Username, true);
             }
         }
     }

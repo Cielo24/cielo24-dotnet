@@ -13,10 +13,18 @@ namespace Cielo24
             return new Uri(uriString);
         }
 
+        public static string BuildUriRawString(string baseUri, string actionPath, Dictionary<string, string> dictionary)
+        {
+            return baseUri + actionPath + "?" + ToQuery(dictionary, dontEscape: true);
+        }
+
         /* Creates a query string from key-value pairs in the dictionary */
-        public static string ToQuery(Dictionary<string, string> dictionary){
-            if (dictionary == null) { return ""; }
-            var pairs = dictionary.Select(pair => pair.Key + "=" + Uri.EscapeDataString(pair.Value));
+        public static string ToQuery(Dictionary<string, string> dictionary, bool dontEscape = false){
+            if (dictionary == null)
+                return "";
+            var pairs = (from pair in dictionary
+                         let value = dontEscape ? pair.Value : Uri.EscapeDataString(pair.Value)
+                         select pair.Key + "=" + value).ToList();
             return string.Join("&", pairs);
         }
 
