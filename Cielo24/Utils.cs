@@ -5,7 +5,7 @@ using Newtonsoft.Json;
 
 namespace Cielo24
 {
-    public class Utils
+    internal class Utils
     {
         /* Concatenates baseUri, actionPath and key-value pairs from the dictionary, returning a uri */
         public static Uri BuildUri(string baseUri, string actionPath, Dictionary<string, string> dictionary){
@@ -33,24 +33,6 @@ namespace Cielo24
         {
             var result = JsonConvert.DeserializeObject<T>(json);
             return result;
-        }
-
-        /* Encodes the supplied Url into an escaped format */
-        public static string EncodeUrl(Uri uri)
-        {
-            return EncodeString(uri.ToString());
-        }
-
-        /* Encodes the supplied string into an escaped format */
-        public static string EncodeString(string str)
-        {
-            return Uri.EscapeUriString(str);
-        }
-
-        /* Unescapes a string */
-        public static string UnescapeUrl(string uriString)
-        {
-            return Uri.UnescapeDataString(uriString);
         }
 
         /* Joins list with delimeter, adding quotes around every element (result of the form ["item 1", "item2", "item 3"])*/
