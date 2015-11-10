@@ -10,7 +10,7 @@ namespace Unit_Test_for_cielo24.NET_library
     [TestClass]
     public class ActionsTest
     {
-        protected Actions Actions = new Actions();
+        protected ApiClient ApiClient = new ApiClient();
         protected Config Config = new Config();
         protected Guid ApiToken = Guid.Empty;
         protected Guid SecureKey = Guid.Empty;
@@ -37,14 +37,14 @@ namespace Unit_Test_for_cielo24.NET_library
         public virtual void Initialize()
         {
             EnableCustomLogger();
-            Actions.ServerUrl = Config.ServerUrl;
+            ApiClient.ServerUrl = Config.ServerUrl;
             if (ApiToken.Equals(Guid.Empty))
             {
-                ApiToken = Actions.Login(Config.Username, Config.Password, true);
+                ApiToken = ApiClient.Login(Config.Username, Config.Password, true);
             }
             if (SecureKey.Equals(Guid.Empty))
             {
-                SecureKey = Actions.GenerateApiKey(ApiToken, Config.Username, true);
+                SecureKey = ApiClient.GenerateApiKey(ApiToken, Config.Username, true);
             }
         }
     }

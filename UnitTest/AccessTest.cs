@@ -16,7 +16,7 @@ namespace Unit_Test_for_cielo24.NET_library
         public void TestLoginPasswordNoHeaders()
         {
             // Username, password, no headers
-            ApiToken = Actions.Login(Config.Username, Config.Password);
+            ApiToken = ApiClient.Login(Config.Username, Config.Password);
             Assert.AreEqual(32, ApiToken.ToString("N").Length);
         }
 
@@ -24,7 +24,7 @@ namespace Unit_Test_for_cielo24.NET_library
         public void TestLoginPasswordHeaders()
         {
             // Username, password, headers
-            ApiToken = Actions.Login(Config.Username, Config.Password, true);
+            ApiToken = ApiClient.Login(Config.Username, Config.Password, true);
             Assert.AreEqual(32, ApiToken.ToString("N").Length);
         }
 
@@ -32,7 +32,7 @@ namespace Unit_Test_for_cielo24.NET_library
         public void TestLoginSecureKeyNoHeaders()
         {
             // Username, secure key, no headers
-            ApiToken = Actions.Login(Config.Username, SecureKey);
+            ApiToken = ApiClient.Login(Config.Username, SecureKey);
             Assert.AreEqual(32, ApiToken.ToString("N").Length);
         }
 
@@ -40,7 +40,7 @@ namespace Unit_Test_for_cielo24.NET_library
         public void TestLoginSecureKeyHeaders()
         {
             // Username, secure key, headers
-            ApiToken = Actions.Login(Config.Username, SecureKey, true);
+            ApiToken = ApiClient.Login(Config.Username, SecureKey, true);
             Assert.AreEqual(32, ApiToken.ToString("N").Length);
         }
 
@@ -48,37 +48,37 @@ namespace Unit_Test_for_cielo24.NET_library
         public void TestLogout()
         {
             // Logout
-            Actions.Logout(ApiToken);
+            ApiClient.Logout(ApiToken);
             ApiToken = Guid.Empty;
         }
 
         [TestMethod]
         public void TestGenerateApiKey()
         {
-            SecureKey = Actions.GenerateApiKey(ApiToken, Config.Username);
+            SecureKey = ApiClient.GenerateApiKey(ApiToken, Config.Username);
             Assert.AreEqual(32, SecureKey.ToString("N").Length);
         }
 
         [TestMethod]
         public void TestGenerateApiKeyForceNew()
         {
-            SecureKey = Actions.GenerateApiKey(ApiToken, Config.Username, true);
+            SecureKey = ApiClient.GenerateApiKey(ApiToken, Config.Username, true);
             Assert.AreEqual(32, SecureKey.ToString("N").Length);
-            Actions.RemoveApiKey(ApiToken, SecureKey);
+            ApiClient.RemoveApiKey(ApiToken, SecureKey);
         }
 
         [TestMethod]
         public void TestRemoveApiKey()
         {
-            Actions.RemoveApiKey(ApiToken, SecureKey);
+            ApiClient.RemoveApiKey(ApiToken, SecureKey);
             SecureKey = Guid.Empty;
         }
 
         [TestMethod]
         public void TestUpdatePassword()
         {
-            Actions.UpdatePassword(ApiToken, Config.NewPassword);
-            Actions.UpdatePassword(ApiToken, Config.Password);
+            ApiClient.UpdatePassword(ApiToken, Config.NewPassword);
+            ApiClient.UpdatePassword(ApiToken, Config.Password);
         }
     }
 }

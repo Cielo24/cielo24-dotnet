@@ -1,6 +1,10 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Collections.Specialized;
 using System.IO;
+using System.Net.Http;
+using System.Threading.Tasks;
+using System.Web;
 using Cielo24.JSON.ElementList;
 using Cielo24.JSON.Job;
 using Cielo24.Options;
@@ -8,7 +12,7 @@ using Newtonsoft.Json;
 
 namespace Cielo24
 {
-    public class Actions
+    public class ApiClient
     {
         public const int Version = 1;
         public string ServerUrl { get; set; } = "https://api.cielo24.com";
@@ -34,9 +38,9 @@ namespace Cielo24
         private const string GetListOfElementListsPath = "/api/job/list_elementlists";
         private const string AggregateStatisticsPath = "/api/job/aggregate_statistics";
 
-        public Actions() { }
+        public ApiClient() { }
 
-        public Actions(string uri)
+        public ApiClient(string uri)
         {
             ServerUrl = uri;
         }
@@ -48,8 +52,8 @@ namespace Cielo24
         /* Performs a Login action. If useHeaders is true, puts username and password into HTTP headers */
         public Guid Login(string username, string password, bool useHeaders = false)
         {
-            AssertArgument(username, "Username");
-            AssertArgument(password, "Password");
+            Assert.StringRequired(username, nameof(username));            
+            Assert.StringRequired(password, nameof(password));
 
             var queryDictionary = InitVersionDict();
             var headers = new Dictionary<string, string>();
@@ -75,7 +79,8 @@ namespace Cielo24
         /* Performs a Login action. If useHeaders is true, puts securekey into HTTP headers */
         public Guid Login(string username, Guid securekey, bool useHeaders = false)
         {
-            AssertArgument(username, "Username");
+            Assert.StringRequired(username, nameof(username));
+            Assert.NotEmpty(securekey, nameof(securekey));
 
             var queryDictionary = InitVersionDict();
             var headers = new Dictionary<string, string>();
@@ -101,6 +106,8 @@ namespace Cielo24
         /* Performs a Logout action */
         public void Logout(Guid apiToken)
         {
+            Assert.NotEmpty(apiToken, nameof(apiToken));
+
             var queryDictionary = InitAccessReqDict(apiToken);
             var requestUri = Utils.BuildUri(ServerUrl, LogoutPath, queryDictionary);
             web.HttpRequest(requestUri, HttpMethod.Get, WebUtils.BasicTimeout); // Nothing returned
@@ -109,7 +116,8 @@ namespace Cielo24
         /* Updates password */
         public void UpdatePassword(Guid apiToken, string newPassword, string subAccount = null)
         {
-            AssertArgument(newPassword, "New Password");
+            Assert.NotEmpty(apiToken, nameof(apiToken));
+            Assert.StringRequired(newPassword, nameof(newPassword));
 
             var queryDictionary = InitAccessReqDict(apiToken);
             queryDictionary.Add("new_password", newPassword);
@@ -122,7 +130,8 @@ namespace Cielo24
         /* Returns a new Secure API key */
         public Guid GenerateApiKey(Guid apiToken, string username, bool forceNew = false)
         {
-            AssertArgument(username, "Username");
+            Assert.NotEmpty(apiToken, nameof(apiToken));
+            Assert.StringRequired(username, nameof(username));
 
             var queryDictionary = InitAccessReqDict(apiToken);
             queryDictionary.Add("account_id", username);
@@ -138,7 +147,8 @@ namespace Cielo24
         /* Deactivates the supplied Secure API key */
         public void RemoveApiKey(Guid apiToken, Guid apiSecurekey)
         {
-            AssertArgument(apiSecurekey, "API Secure Key");
+            Assert.NotEmpty(apiToken, nameof(apiToken));
+
             var queryDictionary = InitAccessReqDict(apiToken);
             queryDictionary.Add("api_securekey", apiSecurekey.ToString("N"));
 
@@ -153,6 +163,8 @@ namespace Cielo24
         /* Creates a new job. Returns an array of Guids where 'JobId' is the 0th element and 'TaskId' is the 1st element */
         public CreateJobResult CreateJob(Guid apiToken, string jobName = null, Language? language = Language.English, string externalId = null, string subAccount = null)
         {
+            Assert.NotEmpty(apiToken, nameof(apiToken));
+            
             var queryDictionary = InitAccessReqDict(apiToken);
             if (jobName != null) { queryDictionary.Add("job_name", jobName); }
             if (language != null) { queryDictionary.Add("language", language.GetDescription()); }
@@ -167,6 +179,9 @@ namespace Cielo24
         /* Authorizes a job with jobId */
         public void AuthorizeJob(Guid apiToken, Guid jobId)
         {
+            Assert.NotEmpty(apiToken, nameof(apiToken));
+            Assert.NotEmpty(jobId, nameof(jobId));
+
             var queryDictionary = InitJobReqDict(apiToken, jobId);
             var requestUri = Utils.BuildUri(ServerUrl, AuthorizeJobPath, queryDictionary);
             web.HttpRequest(requestUri, HttpMethod.Get, WebUtils.BasicTimeout); // Nothing returned
@@ -175,6 +190,9 @@ namespace Cielo24
         /* Deletes a job with jobId */
         public Guid DeleteJob(Guid apiToken, Guid jobId)
         {
+            Assert.NotEmpty(apiToken, nameof(apiToken));
+            Assert.NotEmpty(jobId, nameof(jobId));
+
             var response = GetJobResponse<Dictionary<string, string>>(apiToken, jobId, DeleteJobPath);
             return new Guid(response["TaskId"]);
         }
@@ -182,12 +200,17 @@ namespace Cielo24
         /* Gets information about a job with jobId */
         public Job GetJobInfo(Guid apiToken, Guid jobId)
         {
+            Assert.NotEmpty(apiToken, nameof(apiToken));
+            Assert.NotEmpty(jobId, nameof(jobId));
+
             return GetJobResponse<Job>(apiToken, jobId, GetJobInfoPath);
         }
 
         /* Gets a list of jobs */
         public JobList GetJobList(Guid apiToken, JobListOptions options = null)
         {
+            Assert.NotEmpty(apiToken, nameof(apiToken));
+         
             var queryDictionary = InitAccessReqDict(apiToken);
             if (options != null) { queryDictionary = Utils.DictConcat(queryDictionary, options.GetDictionary()); }
 
@@ -201,7 +224,9 @@ namespace Cielo24
         /* Uploads a file from fileStream to job with jobId */
         public Guid AddMediaToJob(Guid apiToken, Guid jobId, Stream fileStream)
         {
-            AssertArgument(fileStream, "File");
+            Assert.NotEmpty(apiToken, nameof(apiToken));
+            Assert.NotEmpty(jobId, nameof(jobId));
+            Assert.NotNull(fileStream, nameof(fileStream));
 
             var queryDictionary = InitJobReqDict(apiToken, jobId);
             var requestUri = Utils.BuildUri(ServerUrl, AddMediaToJobPath, queryDictionary);
@@ -214,18 +239,29 @@ namespace Cielo24
         /* Provides job with jobId a url to media */
         public Guid AddMediaToJob(Guid apiToken, Guid jobId, Uri mediaUrl)
         {
+            Assert.NotEmpty(apiToken, nameof(apiToken));
+            Assert.NotEmpty(jobId, nameof(jobId));
+            Assert.NotEmpty(mediaUrl, nameof(mediaUrl));
+
             return SendMediaUrl(apiToken, jobId, mediaUrl, AddMediaToJobPath);
         }
 
         /* Provides job with jobId a url to media */
         public Guid AddEmbeddedMediaToJob(Guid apiToken, Guid jobId, Uri mediaUrl)
         {
+            Assert.NotEmpty(apiToken, nameof(apiToken));
+            Assert.NotEmpty(jobId, nameof(jobId));
+            Assert.NotEmpty(mediaUrl, nameof(mediaUrl));
+
             return SendMediaUrl(apiToken, jobId, mediaUrl, AddEmbeddedMediaToJobPath);
         }
 
         /* Returns a Uri to the media from job with jobId */
         public Uri GetMedia(Guid apiToken, Guid jobId)
         {
+            Assert.NotEmpty(apiToken, nameof(apiToken));
+            Assert.NotEmpty(jobId, nameof(jobId));
+
             var response = GetJobResponse<Dictionary<string, string>>(apiToken, jobId, GetMediaPath);
             return new Uri(response["MediaUrl"]);
         }
@@ -240,6 +276,9 @@ namespace Cielo24
                                          Language? targetLanguage = null,
                                          PerformTranscriptionOptions options = null)
         {
+            Assert.NotEmpty(apiToken, nameof(apiToken));
+            Assert.NotEmpty(jobId, nameof(jobId));
+
             var queryDictionary = InitJobReqDict(apiToken, jobId);
             queryDictionary.Add("transcription_fidelity", fidelity.GetDescription());
             if (priority != null) { queryDictionary.Add("priority", priority.GetDescription()); }
@@ -257,7 +296,10 @@ namespace Cielo24
 
         /* Returns a transcript from a job with jobId */
         public string GetTranscript(Guid apiToken, Guid jobId, TranscriptOptions transcriptOptions = null)
-        {
+        { 
+            Assert.NotEmpty(apiToken, nameof(apiToken));
+            Assert.NotEmpty(jobId, nameof(jobId));
+
             var queryDictionary = InitJobReqDict(apiToken, jobId);
             if (transcriptOptions != null) { queryDictionary = Utils.DictConcat(queryDictionary, transcriptOptions.GetDictionary()); }
 
@@ -268,6 +310,9 @@ namespace Cielo24
         /* Returns a caption from a job with jobId OR if buildUri is true, returns a string representation of the uri */
         public string GetCaption(Guid apiToken, Guid jobId, CaptionFormat captionFormat, CaptionOptions captionOptions = null)
         {
+            Assert.NotEmpty(apiToken, nameof(apiToken));
+            Assert.NotEmpty(jobId, nameof(jobId));
+
             var queryDictionary = InitJobReqDict(apiToken, jobId);
             queryDictionary.Add("caption_format", captionFormat.GetDescription());
             if (captionOptions != null) { queryDictionary = Utils.DictConcat(queryDictionary, captionOptions.GetDictionary()); }
@@ -283,6 +328,9 @@ namespace Cielo24
         /* Returns an element list */
         public ElementList GetElementList(Guid apiToken, Guid jobId, DateTime? elementListVersion = null)
         {
+            Assert.NotEmpty(apiToken, nameof(apiToken));
+            Assert.NotEmpty(jobId, nameof(jobId));
+
             var queryDictionary = InitJobReqDict(apiToken, jobId);
             if (elementListVersion != null) { queryDictionary.Add("elementlist_version", Utils.DateToIsoFormat(elementListVersion)); }
 
@@ -294,6 +342,9 @@ namespace Cielo24
         /* Returns a list of elements lists */
         public List<ElementListVersion> GetListOfElementLists(Guid apiToken, Guid jobId)
         {
+            Assert.NotEmpty(apiToken, nameof(apiToken));
+            Assert.NotEmpty(jobId, nameof(jobId));
+
             return GetJobResponse<List<ElementListVersion>>(apiToken, jobId, GetListOfElementListsPath);
         }
 
@@ -301,6 +352,8 @@ namespace Cielo24
         public Dictionary<string, object> AggregateStatistics(Guid apiToken, List<string> metrics,
             string groupBy, DateTime? startDate, DateTime? endDate, string subAccount)
         {
+            Assert.NotEmpty(apiToken, nameof(apiToken));
+
             var queryDictionary = InitAccessReqDict(apiToken);
 
             if (metrics != null)
@@ -330,8 +383,6 @@ namespace Cielo24
         /* Helper method for AddMediaToJob and AddEmbeddedMediaToJob methods */
         private Guid SendMediaUrl(Guid apiToken, Guid jobId, Uri mediaUrl, string path)
         {
-            AssertArgument(mediaUrl, "Media URL");
-
             var queryDictionary = InitJobReqDict(apiToken, jobId);
             queryDictionary.Add("media_url", mediaUrl.ToString());
 
@@ -353,7 +404,6 @@ namespace Cielo24
         /* Returns a dictionary with version, api_token and job_id key-value pairs (parameters used in almost every job-control action). */
         private static Dictionary<string, string> InitJobReqDict(Guid apiToken, Guid jobId)
         {
-            AssertArgument(jobId, "Job Id");
             var queryDictionary = InitAccessReqDict(apiToken);
             queryDictionary.Add("job_id", jobId.ToString("N"));
             return queryDictionary;
@@ -362,7 +412,6 @@ namespace Cielo24
         /* Returns a dictionary with version and api_token key-value pairs (parameters used in almost every access-control action). */
         private static Dictionary<string, string> InitAccessReqDict(Guid apiToken)
         {
-            AssertArgument(apiToken, "API Token");
             var queryDictionary = InitVersionDict();
             queryDictionary.Add("api_token", apiToken.ToString("N"));
             return queryDictionary;
@@ -373,22 +422,6 @@ namespace Cielo24
         {
             var queryDictionary = new Dictionary<string, string> {{"v", Version.ToString()}};
             return queryDictionary;
-        }
-
-        /* If arg is invalid (null or empty), throws an ArgumentException */
-        private static void AssertArgument(string arg, string argName)
-        {
-            if (arg == null || arg.Equals("")) { throw new ArgumentException("Invalid " + argName); }
-        }
-
-        private static void AssertArgument(Guid arg, string argName)
-        {
-            if (arg.Equals(Guid.Empty)) { throw new ArgumentException("Invalid " + argName); }
-        }
-
-        private static void AssertArgument(object arg, string argName)
-        {
-            if (arg == null) { throw new ArgumentException("Invalid " + argName); }
         }
     }
 }
