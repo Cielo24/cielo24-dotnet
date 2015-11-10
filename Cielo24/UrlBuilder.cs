@@ -23,11 +23,13 @@ namespace Cielo24
 
         public UrlBuilder AddJobId(Guid jobId)
         {
+            Assert.NotEmpty(jobId, nameof(jobId));
             return Add("job_id", jobId.ToString("N"));
         }
 
         public UrlBuilder AddApiToken(Guid apiToken)
         {
+            Assert.NotEmpty(apiToken, nameof(apiToken));
             return Add("api_token", apiToken.ToString("N"));
         }
 

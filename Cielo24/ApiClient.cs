@@ -226,7 +226,6 @@ namespace Cielo24
         /// <returns></returns>
         public Guid AddMediaToJob(Guid jobId, Stream fileStream)
         {
-            Assert.NotEmpty(jobId, nameof(jobId));
             Assert.NotNull(fileStream, nameof(fileStream));
 
             var url = UrlBuilder

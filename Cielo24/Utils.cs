@@ -7,17 +7,6 @@ namespace Cielo24
 {
     internal class Utils
     {
-        /* Concatenates baseUri, actionPath and key-value pairs from the dictionary, returning a uri */
-        public static Uri BuildUri(string baseUri, string actionPath, Dictionary<string, string> dictionary){
-            var uriString = baseUri + actionPath + "?" + ToQuery(dictionary);
-            return new Uri(uriString);
-        }
-
-        public static string BuildUriRawString(string baseUri, string actionPath, Dictionary<string, string> dictionary)
-        {
-            return baseUri + actionPath + "?" + ToQuery(dictionary, true);
-        }
-
         /* Creates a query string from key-value pairs in the dictionary */
         public static string ToQuery(Dictionary<string, string> dictionary, bool dontEscape = false){
             if (dictionary == null)
@@ -42,16 +31,6 @@ namespace Cielo24
                 return null;
 
             return "[" + string.Join(delimeter, list.Select(t => "\"" + t + "\"")) + "]";
-        }
-
-        /* Concatinates two dictionaries together returning one */
-        public static Dictionary<string, string> DictConcat(Dictionary<string, string> d1, Dictionary<string, string> d2)
-        {
-            foreach (var pair in d2)
-            {
-                d1.Add(pair.Key, pair.Value);
-            }
-            return d1;
         }
 
         public static string DateToIsoFormat(DateTime? dateTime)
