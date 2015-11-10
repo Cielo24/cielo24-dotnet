@@ -38,6 +38,9 @@ namespace Cielo24
         /* Joins list with delimeter, adding quotes around every element (result of the form ["item 1", "item2", "item 3"])*/
         public static string JoinQuoteList<T>(List<T> list, string delimeter)
         {
+            if (list == null)
+                return null;
+
             return "[" + string.Join(delimeter, list.Select(t => "\"" + t + "\"")) + "]";
         }
 
@@ -53,7 +56,7 @@ namespace Cielo24
 
         public static string DateToIsoFormat(DateTime? dateTime)
         {
-            return ((DateTime)dateTime).ToString("yyyy-MM-ddTHH:mm:ss.fffffffzzz");
+            return dateTime?.ToString("yyyy-MM-ddTHH:mm:ss.fffffffzzz");
         }
     }
 }

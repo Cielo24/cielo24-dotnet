@@ -43,14 +43,14 @@ namespace Cielo24
         }
 
         /* Used exclusively by UpdatePassword method */
-        public string HttpRequest(Uri uri, HttpMethod method, TimeSpan timeout, string requestBody)
+        public string HttpRequest(string url, HttpMethod method, TimeSpan timeout, string requestBody)
         {
             var s = new MemoryStream(Encoding.UTF8.GetBytes(requestBody));
-            return UploadData(uri, s, "password");
+            return UploadData(url, s, "password");
         }
 
         /* Uploads data in the body of HTTP request */
-        public string UploadData(Uri uri, Stream inputStream, string contentType)
+        public string UploadData(string uri, Stream inputStream, string contentType)
         {
             Debug.WriteLine("Uri: " + uri);
             var request = (HttpWebRequest) WebRequest.Create(uri);
