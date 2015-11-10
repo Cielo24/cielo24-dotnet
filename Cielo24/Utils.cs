@@ -15,7 +15,7 @@ namespace Cielo24
 
         public static string BuildUriRawString(string baseUri, string actionPath, Dictionary<string, string> dictionary)
         {
-            return baseUri + actionPath + "?" + ToQuery(dictionary, dontEscape: true);
+            return baseUri + actionPath + "?" + ToQuery(dictionary, true);
         }
 
         /* Creates a query string from key-value pairs in the dictionary */

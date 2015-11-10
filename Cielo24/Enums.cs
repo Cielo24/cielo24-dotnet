@@ -7,203 +7,203 @@ namespace Cielo24
 {
     public enum TaskType
     {
-        JOB_CREATED,
-        JOB_DELETED,
-        JOB_ADD_MEDIA,
-        JOB_ADD_TRANSCRIPT,
-        JOB_PERFORM_TRANSCRIPTION,
-        JOB_PERFORM_PREMIUM_SYNC,
-        JOB_UPDATE_ELEMENTLIST,
-        JOB_GET_TRANSCRIPT,
-        JOB_GET_CAPTION,
-        JOB_GET_ELEMENTLIST
+        JobCreated,
+        JobDeleted,
+        JobAddMedia,
+        JobAddTranscript,
+        JobPerformTranscription,
+        JobPerformPremiumSync,
+        JobUpdateElementlist,
+        JobGetTranscript,
+        JobGetCaption,
+        JobGetElementlist
     }
 
     public enum ErrorType
     {
-        LOGIN_INVALID,
-        ACCOUNT_EXISTS,
-        ACCOUNT_DOES_NOT_EXIST,
-        ACCOUNT_UNPRIVILEGED,
-        BAD_API_TOKEN,
-        INVALID_QUERY,
-        INVALID_OPTION,
-        INVALID_URL,
-        MISSING_PARAMETER,
-        NOT_IMPLEMENTED,
-        ITEM_NOT_FOUND,
-        INVALID_RETURN_HANDLERS,
-        NOT_PARENT_ACCOUNT,
-        NO_CHILDREN_FOUND,
-        UNHANDLED_ERROR
+        LoginInvalid,
+        AccountExists,
+        AccountDoesNotExist,
+        AccountUnprivileged,
+        BadApiToken,
+        InvalidQuery,
+        InvalidOption,
+        InvalidUrl,
+        MissingParameter,
+        NotImplemented,
+        ItemNotFound,
+        InvalidReturnHandlers,
+        NotParentAccount,
+        NoChildrenFound,
+        UnhandledError
     }
 
     [JsonConverter(typeof(DescriptionToEnumConverter))]
     public enum JobStatus
     {
         [Description("Authorizing")]
-        AUTHORIZING,
+        Authorizing,
         [Description("Pending")]
-        PENDING,
+        Pending,
         [Description("In Process")]
-        IN_PROCESS,
+        InProcess,
         [Description("Complete")]
-        COMPLETE,
+        Complete,
         [Description("Reviewing")]
-        REVIEWING,
+        Reviewing,
         [Description("Media Failure")]
-        MEDIA_FAILURE
+        MediaFailure
     }
 
     public enum Priority
     {
-        ECONOMY,
-        STANDARD,
+        Economy,
+        Standard,
         PRIORITY,
-        CRITICAL
+        Critical
     }
 
     [JsonConverter(typeof(FidelityToEnumConverter))]
     public enum Fidelity
     {
-        MECHANICAL,
-        PREMIUM,
-        PROFESSIONAL
+        Mechanical,
+        Premium,
+        Professional
     }
 
     public enum CaptionFormat
     {
-        SRT,
-        SBV,
-        SCC,
-        DFXP,
-        QT,
-        TRANSCRIPT,
-        TWX,
-        TPM,
-        WEB_VTT,
-        ECHO
+        Srt,
+        Sbv,
+        Scc,
+        Dfxp,
+        Qt,
+        Transcript,
+        Twx,
+        Tpm,
+        WebVtt,
+        Echo
     }
 
     [JsonConverter(typeof(DescriptionToEnumConverter))]
     public enum TokenType
     {
         [Description("word")]
-        WORD,
+        Word,
         [Description("punctuation")]
-        PUNCTUATION,
+        Punctuation,
         [Description("sound")]
-        SOUND
+        Sound
     }
 
     public enum Tag
     {
-        UNKNOWN,
-        INAUDIBLE,
-        CROSSTALK,
-        MUSIC,
-        NOISE,
-        LAUGH,
-        COUGH,
-        FOREIGN,
-        BLANK_AUDIO,
-        APPLAUSE,
-        BLEEP,
-        GUESSED,
-        ENDS_SENTENCE
+        Unknown,
+        Inaudible,
+        Crosstalk,
+        Music,
+        Noise,
+        Laugh,
+        Cough,
+        Foreign,
+        BlankAudio,
+        Applause,
+        Bleep,
+        Guessed,
+        EndsSentence
     }
 
     [JsonConverter(typeof(DescriptionToEnumConverter))]
     public enum SpeakerId
     {
         [Description("no")]
-        NO,
+        No,
         [Description("number")]
-        NUMBER,
+        Number,
         [Description("name")]
-        NAME
+        Name
     }
 
     public enum SpeakerGender
     {
-        UNKNOWN,
-        MALE,
-        FEMALE
+        Unknown,
+        Male,
+        Female
     }
 
     [JsonConverter(typeof(DescriptionToEnumConverter))]
     public enum Case {
         [Description("upper")]
-        UPPER,
+        Upper,
         [Description("lower")]
-        LOWER,
+        Lower,
         [Description("")]
-        UNCHANGED
+        Unchanged
     }
 
     public enum LineEnding
     {
-        UNIX,
-        WINDOWS,
-        OSX
+        Unix,
+        Windows,
+        Osx
     }
 
     public enum CustomerApprovalStep
     {
-        TRANSLATION,
-        RETURN
+        Translation,
+        Return
     }
 
     public enum CustomerApprovalTool
     {
-        AMARA,
-        CIELO24
+        Amara,
+        Cielo24
     }
 
     [JsonConverter(typeof(DescriptionToEnumConverter))]
     public enum Language
     {
         [Description("en")]
-        ENGLISH,
+        English,
         [Description("fr")]
-        FRENCH,
+        French,
         [Description("es")]
-        SPANISH,
+        Spanish,
         [Description("de")]
-        GERMAN,
+        German,
         [Description("cmn")]
-        MANDARIN_CHINESE,
+        MandarinChinese,
         [Description("pt")]
-        PORTUGUESE,
+        Portuguese,
         [Description("jp")]
-        JAPANESE,
+        Japanese,
         [Description("ar")]
-        ARABIC,
+        Arabic,
         [Description("ko")]
-        KOREAN,
+        Korean,
         [Description("zh")]
-        TRADITIONAL_CHINESE,
+        TraditionalChinese,
         [Description("hi")]
-        HINDI,
+        Hindi,
         [Description("it")]
-        ITALIAN,
+        Italian,
         [Description("ru")]
-        RUSSIAN,
+        Russian,
         [Description("tr")]
-        TURKISH,
+        Turkish,
         [Description("he")]
-        HEBREW
+        Hebrew
     }
 
     [JsonConverter(typeof(DescriptionToEnumConverter))]
     public enum JobDifficulty
     {
         [Description("Good")]
-        GOOD,
+        Good,
         [Description("Bad")]
-        BAD,
+        Bad,
         [Description("Unknown")]
-        UNKNOWN
+        Unknown
     }
 
     /* Converts description into enum */
@@ -245,10 +245,10 @@ namespace Cielo24
             var readerValue = reader.Value.ToString().ToUpper();
             if (readerValue.Equals("STANDARD"))
             {
-                return Fidelity.PREMIUM;
+                return Fidelity.Premium;
             }
             return readerValue.Equals("HIGH")
-                ? Fidelity.PROFESSIONAL
+                ? Fidelity.Professional
                 : base.ReadJson(reader, objectType, existingValue, serializer);
         }
     }

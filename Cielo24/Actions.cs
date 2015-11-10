@@ -151,7 +151,7 @@ namespace Cielo24
         ///////////////////
 
         /* Creates a new job. Returns an array of Guids where 'JobId' is the 0th element and 'TaskId' is the 1st element */
-        public CreateJobResult CreateJob(Guid apiToken, string jobName = null, Language? language = Language.ENGLISH, string externalId = null, string subAccount = null)
+        public CreateJobResult CreateJob(Guid apiToken, string jobName = null, Language? language = Language.English, string externalId = null, string subAccount = null)
         {
             var queryDictionary = InitAccessReqDict(apiToken);
             if (jobName != null) { queryDictionary.Add("job_name", jobName); }
@@ -274,7 +274,7 @@ namespace Cielo24
 
             var requestUri = Utils.BuildUri(ServerUrl, GetCaptionPath, queryDictionary);
             var serverResponse = web.HttpRequest(requestUri, HttpMethod.Get, WebUtils.DownloadTimeout);
-            if (captionOptions == null || captionOptions.BuildUrl == null || captionOptions.BuildUrl != true)
+            if (captionOptions?.BuildUrl == null || captionOptions.BuildUrl != true)
                 return serverResponse; // Caption text
             var response = Utils.Deserialize<Dictionary<string, string>>(serverResponse);
             return response["CaptionUrl"];

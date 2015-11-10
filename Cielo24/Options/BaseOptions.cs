@@ -70,30 +70,32 @@ namespace Cielo24.Options
         /* Converts 'value' into string based on its type. Precondition: value != null */
         protected string GetStringValue(object value)
         {
-            if (value is List<string>)
-            {
-                return Utils.JoinQuoteList((List<string>)value, ", ");
-            }
-            if (value is List<Tag>)
-            {
-                return Utils.JoinQuoteList((List<Tag>)value, ", ");
-            }
-            if (value is List<Fidelity>)
-            {
-                return Utils.JoinQuoteList((List<Fidelity>)value, ", ");
-            }
-            if (value is char[])       // char[] (returned as (a, b))
-            {
-                return "(" + string.Join(", ", ((char[])value)) + ")";
-            }
+            var list = value as List<string>;
+
+            if (list != null)
+                return Utils.JoinQuoteList(list, ", ");
+
+            var tags = value as List<Tag>;
+            if (tags != null)
+                return Utils.JoinQuoteList(tags, ", ");
+
+            var fidelities = value as List<Fidelity>;
+            if (fidelities != null)
+                return Utils.JoinQuoteList(fidelities, ", ");
+
+            var chars = value as char[];
+            if (chars != null) // char[] (returned as (a, b))
+                return "(" + string.Join(", ", chars) + ")";
+
             if (value is DateTime)     // DateTime (in ISO 8601 format)
             {
                 return Utils.DateToIsoFormat((DateTime)value);
             }
-            if (value is Enum)
-            {
-                return ((Enum)value).GetDescription();
-            }
+
+            var enumValue = value as Enum;
+            if (enumValue != null)
+                return enumValue.GetDescription();
+
             // Takes care of the rest: int, bool, string, Uri
             return value.ToString();
         }
