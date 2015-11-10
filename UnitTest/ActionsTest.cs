@@ -10,9 +10,8 @@ namespace Unit_Test_for_cielo24.NET_library
     [TestClass]
     public class ActionsTest
     {
-        protected ApiClient ApiClient = new ApiClient();
+        protected ApiClient ApiClient;
         protected Config Config = new Config();
-        protected Guid ApiToken = Guid.Empty;
         protected Guid SecureKey = Guid.Empty;
         // Storing memoryTarget here, so that unittests can access it
         protected MemoryTarget MemoryTarget;
@@ -37,14 +36,10 @@ namespace Unit_Test_for_cielo24.NET_library
         public virtual void Initialize()
         {
             EnableCustomLogger();
-            ApiClient.ServerUrl = Config.ServerUrl;
-            if (ApiToken.Equals(Guid.Empty))
+
+            if (ApiClient == null)
             {
-                ApiToken = ApiClient.Login(Config.Username, Config.Password, true);
-            }
-            if (SecureKey.Equals(Guid.Empty))
-            {
-                SecureKey = ApiClient.GenerateApiKey(ApiToken, Config.Username, true);
+                ApiClient = ApiClient.Login(Config.Username, Config.Password, Config.ServerUrl);
             }
         }
     }
