@@ -1,5 +1,7 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.ComponentModel;
+using System.Linq;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Converters;
 
@@ -221,6 +223,26 @@ namespace Cielo24
         [Description("Unknown")]
         Unknown
     }
+
+    [Flags]
+    [JsonConverter(typeof(DescriptionToEnumConverter))]
+    public enum Metric
+    {
+        [Description("billable_minutes_total")]
+        BillableMinutesTotal = 1,
+        [Description("billable_minutes_mechanical")]
+        BillableMinutesMechanical = 2,
+        [Description("billable_minutes_premium")]
+        BillableMinutesPremium = 4,
+        [Description("billable_minutes_professional")]
+        BillableMinutesProfessional = 8,
+        [Description("billable_minutes_foreign_transcription")]
+        BillableMinutesForeignTranscription = 16,
+        [Description("billable_minutes_translation")]
+        BillableMinutesTranslation = 32,
+        [Description("billable_english_transcription")]
+        BillableMinutesEnglishTranscription = 64
+    }
     
     /* Converts description into enum */
     public class DescriptionToEnumConverter : StringEnumConverter
@@ -282,6 +304,13 @@ namespace Cielo24
                 return value.ToString();
             var desc = Attribute.GetCustomAttribute(field, typeof(DescriptionAttribute)) as DescriptionAttribute;
             return desc != null ? desc.Description : value.ToString().ToUpper();
+        }
+
+        public static List<string> ToStringList(this Enum flags)
+        {
+            return (from Enum flag in Enum.GetValues(flags.GetType())
+                    where flags.HasFlag(flag)
+                    select flag.GetDescription()).ToList();
         }
     }
 }

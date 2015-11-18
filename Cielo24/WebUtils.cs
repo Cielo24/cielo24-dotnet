@@ -119,7 +119,7 @@ namespace Cielo24
     {
         public string ErrorType { get; }
 
-        public EnumWebException(string errType, string message, WebException inner)
+        public EnumWebException(string errType, string message, Exception inner)
             : base(errType + ": " + message, inner)
         {
             ErrorType = errType;

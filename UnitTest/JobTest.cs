@@ -154,8 +154,9 @@ namespace Unit_Test_for_cielo24.NET_library
         [TestMethod]
         public void TestAggregateStatistics()
         {
-            var metrics = new List<string> {"billable_minutes_total", "billable_minutes_professional"};
-            var result = ApiClient.AggregateStatistics(metrics, "month", new DateTime(2015, 6, 25), new DateTime(2015, 7, 25), "*");
+            var result = ApiClient.AggregateStatistics(Metric.BillableMinutesTotal | Metric.BillableMinutesProfessional,
+                "month", new DateTime(2015, 6, 25), new DateTime(2015, 7, 25), "*");
+
             Assert.IsNotNull(result);
         }
     }

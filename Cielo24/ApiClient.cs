@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.IO;
+using System.Text;
 using Cielo24.JSON.ElementList;
 using Cielo24.JSON.Job;
 using Cielo24.Options;
@@ -358,7 +359,6 @@ namespace Cielo24
         /// <summary>
         /// Returns an element list.
         /// </summary>
-        /// <param name="apiToken"></param>
         /// <param name="jobId"></param>
         /// <param name="elementListVersion"></param>
         /// <returns></returns>
@@ -396,18 +396,34 @@ namespace Cielo24
         /// <param name="endDate"></param>
         /// <param name="subAccount"></param>
         /// <returns></returns>
-        public Dictionary<string, object> AggregateStatistics(List<string> metrics,
+        public Dictionary<string, object> AggregateStatistics(Metric? metrics,
             string groupBy, DateTime? startDate, DateTime? endDate, string subAccount)
         {
             var url = QueryBuilder
-                .AddOptional("metrics", Utils.JoinQuoteList(metrics, ","))
                 .AddOptional("group_by", groupBy)
-                .AddOptional("start_date", Utils.DateToIsoFormat(startDate))
-                .AddOptional("end_date", Utils.DateToIsoFormat(endDate))
                 .AddOptional("account_id", subAccount)
                 .BuildUrl(Paths.AggregateStatistics);
-            
-            var serverResponse = web.HttpRequest(url, HttpMethod.Get, WebUtils.BasicTimeout);
+
+            var urlBuilder = new StringBuilder(url);
+
+            if (startDate.HasValue)
+            {
+                urlBuilder.Append("&start_date=");
+                urlBuilder.Append(Utils.DateToIsoFormat(startDate));
+            }
+            if (endDate.HasValue)
+            {
+                urlBuilder.Append("&end_date=");
+                urlBuilder.Append(Utils.DateToIsoFormat(endDate));
+            }
+
+            if (metrics != null)
+            {
+                urlBuilder.Append("&metrics=");
+                urlBuilder.Append(Utils.JoinQuoteList(metrics.ToStringList(), ","));
+            }
+
+            var serverResponse = web.HttpRequest(urlBuilder.ToString(), HttpMethod.Get, WebUtils.BasicTimeout);
             return Utils.Deserialize<Dictionary<string, object>>(serverResponse);
         }
 
