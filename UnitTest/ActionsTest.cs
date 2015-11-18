@@ -1,5 +1,4 @@
-﻿using System;
-using Cielo24;
+﻿using Cielo24;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using NLog;
 using NLog.Config;
@@ -12,7 +11,6 @@ namespace Unit_Test_for_cielo24.NET_library
     {
         protected ApiClient ApiClient;
         protected Config Config = new Config();
-        protected Guid SecureKey = Guid.Empty;
         // Storing memoryTarget here, so that unittests can access it
         protected MemoryTarget MemoryTarget;
 

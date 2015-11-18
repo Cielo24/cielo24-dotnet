@@ -114,7 +114,7 @@ namespace Unit_Test_for_cielo24.NET_library
         {
             ApiClient.AddMediaToJob(JobId, Config.SampleVideoUri);
             var callbackUri = new Uri("http://fake-callback.com/action?api_token=1234&job_id={job_id}");
-            TaskId = ApiClient.PerformTranscription(JobId, Fidelity.Premium, Priority.Standard, callbackUri);
+            TaskId = ApiClient.PerformTranscription(JobId, Fidelity.Premium, JobPriority.Standard, callbackUri);
             Assert.AreEqual(32, TaskId.ToString("N").Length);
         }
 
@@ -122,9 +122,9 @@ namespace Unit_Test_for_cielo24.NET_library
         public void TestPerformTranscriptionCallbackUrlEncoding()
         {
             var callbackUri = new Uri("http://fake-callback.com/action?api_token=1234&job_id={job_id}");
-            const string encodedUri = "callback_url=http:%2F%2Ffake-callback.com%2Faction%3Fapi_token%3D1234%26job_id%3D{job_id}";
+            const string encodedUri = "callback_url=http%3a%2f%2ffake-callback.com%2faction%3fapi_token%3d1234%26job_id%3d%7bjob_id%7d";
             ApiClient.AddMediaToJob(JobId, Config.SampleVideoUri);
-            TaskId = ApiClient.PerformTranscription(JobId, Fidelity.Premium, Priority.Standard, callbackUri);
+            TaskId = ApiClient.PerformTranscription(JobId, Fidelity.Premium, JobPriority.Standard, callbackUri);
             // Last log entry will contain the callback to perform_transcription
             Assert.IsTrue(MemoryTarget.Logs.Last().Contains(encodedUri));
         }

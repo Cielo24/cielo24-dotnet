@@ -4,66 +4,66 @@ using System.Web;
 
 namespace Cielo24
 {
-    class UrlBuilder
+    class QueryBuilder
     {
         private readonly Dictionary<string, string> query;
 
         public string ServerUrl { get; }
 
-        private UrlBuilder(string serverUrl, Dictionary<string, string> query)
-            : this(serverUrl)
+        private QueryBuilder(string serverUrl, Dictionary<string, string> query)
         {
+            ServerUrl = serverUrl;
             this.query = query;
         }
 
-        public UrlBuilder(string serverUrl)
-        {
-            ServerUrl = serverUrl;
-        }
+        public QueryBuilder(string serverUrl)
+            : this(serverUrl, new Dictionary<string, string>())
+        {}
 
-        public UrlBuilder AddJobId(Guid jobId)
+        public QueryBuilder AddJobId(Guid jobId)
         {
             Assert.NotEmpty(jobId, nameof(jobId));
             return Add("job_id", jobId.ToString("N"));
         }
 
-        public UrlBuilder AddApiToken(Guid apiToken)
+        public QueryBuilder AddApiToken(Guid apiToken)
         {
             Assert.NotEmpty(apiToken, nameof(apiToken));
             return Add("api_token", apiToken.ToString("N"));
         }
 
-        public UrlBuilder AddApiVersion(int version)
+        public QueryBuilder AddApiVersion(int version)
         {
             return Add("v", version.ToString());
         }
 
-        public UrlBuilder Add(string key, string value)
+        public QueryBuilder Add(string key, string value)
         {
             Assert.StringRequired(key, nameof(key));
             Assert.StringRequired(value, nameof(value));
 
             var newQuery = new Dictionary<string, string>(query) {{key, value}};
-            return new UrlBuilder(ServerUrl, newQuery);
+            return new QueryBuilder(ServerUrl, newQuery);
         }
 
-        public UrlBuilder AddOptional(string key, string value)
+        public QueryBuilder AddOptional(string key, string value)
         {
             return string.IsNullOrEmpty(value) ? this : Add(key, value);
         }
 
-        public UrlBuilder AddFromDictionary(Dictionary<string, string> dictionary)
+        public QueryBuilder AddFromDictionary(Dictionary<string, string> dictionary)
         {
             if (dictionary == null)
                 return this;
 
+            var result = this;
             foreach (var pair in dictionary)
-                Add(pair.Key, pair.Value);
+                result = result.Add(pair.Key, pair.Value);
 
-            return this;
+            return result;
         }
 
-        public string Build(string path)
+        public string BuildUrl(string path)
         {
             var queryParams = HttpUtility.ParseQueryString(string.Empty);
             foreach (var pair in query)
@@ -75,6 +75,11 @@ namespace Cielo24
                 Path = path
             };
             return builder.ToString();
+        }
+
+        public string ToQuery()
+        {
+            return Utils.ToQuery(this.query);
         }
     }
 }

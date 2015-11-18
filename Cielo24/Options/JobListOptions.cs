@@ -25,7 +25,7 @@ namespace Cielo24.Options
         [QueryName("Fidelity")]
         public Fidelity? Fidelity { get; set; }
         [QueryName("Priority")]
-        public Priority? Priority { get; set; }
+        public JobPriority? Priority { get; set; }
         [QueryName("TurnaroundTimeHoursFrom")]
         public int? TurnaroundTimeHoursFrom { get; set; }
         [QueryName("TurnaroundTimeHoursTo")]
@@ -49,7 +49,7 @@ namespace Cielo24.Options
                               DateTime? completeDateTo = null,
                               JobStatus? jobStatus = null,
                               Fidelity? fidelity = null,
-                              Priority? priority = null,
+                              JobPriority? priority = null,
                               int? turnaroundTimeHoursFrom = null,
                               int? turnaroundTimeHoursTo = null,
                               string jobName = null,

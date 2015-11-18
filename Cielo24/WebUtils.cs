@@ -108,7 +108,7 @@ namespace Cielo24
                 var streamReader = new StreamReader(errorStream);
                 var errorJson = streamReader.ReadToEnd();
                 var responseDict = Utils.Deserialize<Dictionary<string, string>>(errorJson);
-                throw new EnumWebException(responseDict["ErrorType"], responseDict["ErrorComment"]);
+                throw new EnumWebException(responseDict["ErrorType"], responseDict["ErrorComment"], error);
             }
         }
     }
@@ -119,8 +119,8 @@ namespace Cielo24
     {
         public string ErrorType { get; }
 
-        public EnumWebException(string errType, string message)
-            : base(errType + ": " + message)
+        public EnumWebException(string errType, string message, WebException inner)
+            : base(errType + ": " + message, inner)
         {
             ErrorType = errType;
         }

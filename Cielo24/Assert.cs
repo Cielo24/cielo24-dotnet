@@ -13,7 +13,7 @@ namespace Cielo24
 
         public static void NotEmpty<T>(T value, string argName)
         {
-            if (default(T).Equals(value))
+            if (object.Equals(default(T), value))
                 throw new ArgumentException("Value cannot be an empty", argName);
         }
 

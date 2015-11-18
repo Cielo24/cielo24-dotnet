@@ -17,7 +17,7 @@ namespace Cielo24.JSON.Job
         [JsonProperty("ExternalID")]
         public string ExternalId { get; set; }
         [JsonProperty("Priority")]
-        public Priority? Priority { get; set; }
+        public JobPriority? Priority { get; set; }
         [JsonProperty("Fidelity")]
         public Fidelity? Fidelity { get; set; }
         [JsonProperty("JobStatus")]

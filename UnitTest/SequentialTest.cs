@@ -16,11 +16,11 @@ namespace Unit_Test_for_cielo24.NET_library
         {
             // Login, generate API key, logout
             var client = ApiClient.Login(Config.Username, Config.Password, Config.ServerUrl);
-            SecureKey = client.GenerateApiKey(Config.Username, true);
+            var secureKey = client.GenerateApiKey(Config.Username, true);
             client.Logout();
 
             // Login using API key
-            client = ApiClient.Login(Config.Username, SecureKey, Config.ServerUrl);
+            client = ApiClient.Login(Config.Username, secureKey, Config.ServerUrl);
 
             // Create a job using a media URL
             JobId = client.CreateJob( ".NET_test_job").JobId;
@@ -46,7 +46,7 @@ namespace Unit_Test_for_cielo24.NET_library
             client.Logout();
 
             // Login using API key
-            client = ApiClient.Login(Config.Username, SecureKey);
+            client = ApiClient.Login(Config.Username, secureKey, Config.ServerUrl);
 
             // Delete job and assert JobList data
             client.DeleteJob(JobId);
@@ -54,17 +54,17 @@ namespace Unit_Test_for_cielo24.NET_library
             Assert.IsFalse(ContainsJob(JobId, list2), "JobId should not be in JobList");
 
             // Delete current API key and try to re-login (should fail)
-            client.RemoveApiKey(SecureKey);
+            client.RemoveApiKey(secureKey);
             client.Logout();
 
             try
             {
-                ApiClient.Login(Config.Username, SecureKey);
+                ApiClient.Login(Config.Username, secureKey, Config.ServerUrl);
                 Assert.Fail("Should not be able to login using invalid API key");
             }
             catch (EnumWebException e)
             {
-                Assert.AreEqual(ErrorType.AccountUnprivileged.ToString(), e.ErrorType, "Unexpected error type");
+                Assert.AreEqual("ACCOUNT_UNPRIVILEGED", e.ErrorType, "Unexpected error type");
             }
         }
 

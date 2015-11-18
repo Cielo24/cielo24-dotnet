@@ -25,7 +25,8 @@ namespace Unit_Test_for_cielo24.NET_library
         public void TestLoginSecureKey()
         {
             // Username, secure key, no headers
-            var client = ApiClient.Login(Config.Username, SecureKey, Config.ServerUrl);
+            var secureKey = ApiClient.GenerateApiKey(Config.Username);
+            var client = ApiClient.Login(Config.Username, secureKey, Config.ServerUrl);
             Assert.AreEqual(32, client.ApiToken.ToString("N").Length);
         }
 
@@ -39,23 +40,23 @@ namespace Unit_Test_for_cielo24.NET_library
         [TestMethod]
         public void TestGenerateApiKey()
         {
-            SecureKey = ApiClient.GenerateApiKey(Config.Username);
-            Assert.AreEqual(32, SecureKey.ToString("N").Length);
+            var secureKey = ApiClient.GenerateApiKey(Config.Username);
+            Assert.AreEqual(32, secureKey.ToString("N").Length);
         }
 
         [TestMethod]
         public void TestGenerateApiKeyForceNew()
         {
-            SecureKey = ApiClient.GenerateApiKey(Config.Username, true);
-            Assert.AreEqual(32, SecureKey.ToString("N").Length);
-            ApiClient.RemoveApiKey(SecureKey);
+            var secureKey = ApiClient.GenerateApiKey(Config.Username, true);
+            Assert.AreEqual(32, secureKey.ToString("N").Length);
+            ApiClient.RemoveApiKey(secureKey);
         }
 
         [TestMethod]
         public void TestRemoveApiKey()
         {
-            ApiClient.RemoveApiKey(SecureKey);
-            SecureKey = Guid.Empty;
+            var secureKey = ApiClient.GenerateApiKey(Config.Username);
+            ApiClient.RemoveApiKey(secureKey);
         }
 
         [TestMethod]

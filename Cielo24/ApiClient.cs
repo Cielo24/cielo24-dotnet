@@ -15,15 +15,15 @@ namespace Cielo24
 
         private readonly WebUtils web = new WebUtils();
 
-        private UrlBuilder UrlBuilder { get; }
+        private QueryBuilder QueryBuilder { get; }
 
         public Guid ApiToken { get; }
-        public string ServerUrl => UrlBuilder.ServerUrl;        
+        public string ServerUrl => QueryBuilder.ServerUrl;        
 
         private ApiClient(string serverUrl, Guid apiToken)
         {
             ApiToken = apiToken;
-            UrlBuilder = new UrlBuilder(serverUrl)
+            QueryBuilder = new QueryBuilder(serverUrl)
                 .AddApiVersion(ApiVersion)
                 .AddApiToken(apiToken);
         }
@@ -40,11 +40,11 @@ namespace Cielo24
             Assert.StringRequired(username, nameof(username));
             Assert.StringRequired(password, nameof(password));
 
-            var url = new UrlBuilder(serverUrl)
+            var url = new QueryBuilder(serverUrl)
                 .AddApiVersion(ApiVersion)
                 .Add("username", username)
                 .Add("password", password)
-                .Build(Paths.Login);
+                .BuildUrl(Paths.Login);
            
             var serverResponse = new WebUtils().HttpRequest(url, HttpMethod.Get, WebUtils.BasicTimeout);
             var response = Utils.Deserialize<Dictionary<string, string>>(serverResponse);
@@ -65,11 +65,11 @@ namespace Cielo24
             Assert.StringRequired(username, nameof(username));
             Assert.NotEmpty(secureKey, nameof(secureKey));
 
-            var url = new UrlBuilder(serverUrl)
+            var url = new QueryBuilder(serverUrl)
                 .AddApiVersion(ApiVersion)
                 .Add("username", username)
                 .Add("secureKey", secureKey.ToString("N"))
-                .Build(Paths.Login);
+                .BuildUrl(Paths.Login);
             
             var serverResponse = new WebUtils().HttpRequest(url, HttpMethod.Get, WebUtils.BasicTimeout);
             var response = Utils.Deserialize<Dictionary<string, string>>(serverResponse);
@@ -84,7 +84,7 @@ namespace Cielo24
         /// </summary>
         public void Logout()
         {
-            var url = UrlBuilder.Build(Paths.Logout);
+            var url = QueryBuilder.BuildUrl(Paths.Logout);
             web.HttpRequest(url, HttpMethod.Get, WebUtils.BasicTimeout);
         }
 
@@ -96,13 +96,14 @@ namespace Cielo24
         public void UpdatePassword(string newPassword, string subAccount = null)
         {
             Assert.StringRequired(newPassword, nameof(newPassword));
-
-            var url = UrlBuilder
-                .AddOptional("username", subAccount)
+            
+            var url = QueryBuilder.BuildUrl(Paths.UpdatePassword);
+            var query = QueryBuilder
                 .Add("new_password", newPassword)
-                .Build(Paths.UpdatePassword);
+                .AddOptional("username", subAccount)
+                .ToQuery();
 
-            web.HttpRequest(url, HttpMethod.Post, WebUtils.BasicTimeout);
+            web.HttpRequest(url, HttpMethod.Post, WebUtils.BasicTimeout, query);
         }
         
         /// <summary>
@@ -115,10 +116,10 @@ namespace Cielo24
         {
             Assert.StringRequired(username, nameof(username));
 
-            var url = UrlBuilder
+            var url = QueryBuilder
                 .Add("account_id", username)
                 .Add("force_new", forceNew.ToString())
-                .Build(Paths.GenerateApiKey);
+                .BuildUrl(Paths.GenerateApiKey);
             
             var serverResponse = web.HttpRequest(url, HttpMethod.Get, WebUtils.BasicTimeout);
             var response = Utils.Deserialize<Dictionary<string, string>>(serverResponse);
@@ -132,9 +133,9 @@ namespace Cielo24
         /// <param name="apiSecurekey">secure API key to be invalidated</param>
         public void RemoveApiKey(Guid apiSecurekey)
         {
-            var url = UrlBuilder
+            var url = QueryBuilder
                 .Add("api_securekey", apiSecurekey.ToString("N"))
-                .Build(Paths.RemoveApiKey);
+                .BuildUrl(Paths.RemoveApiKey);
             
             web.HttpRequest(url, HttpMethod.Get, WebUtils.BasicTimeout);
         }
@@ -150,12 +151,12 @@ namespace Cielo24
         /// <returns>result of creating a job</returns>
         public CreateJobResult CreateJob(string jobName = null, Language? language = Language.English, string externalId = null, string subAccount = null)
         {
-            var url = UrlBuilder
+            var url = QueryBuilder
                 .AddOptional("job_name", jobName)
                 .AddOptional("language", language?.GetDescription())
                 .AddOptional("external_id", externalId)
                 .AddOptional("username", subAccount)
-                .Build(Paths.CreateJob);
+                .BuildUrl(Paths.CreateJob);
             
             var serverResponse = web.HttpRequest(url, HttpMethod.Get, WebUtils.BasicTimeout);
             return Utils.Deserialize<CreateJobResult>(serverResponse);
@@ -169,9 +170,9 @@ namespace Cielo24
         {
             Assert.NotEmpty(jobId, nameof(jobId));
 
-            var url = UrlBuilder
+            var url = QueryBuilder
                 .AddJobId(jobId)
-                .Build(Paths.AuthorizeJob);
+                .BuildUrl(Paths.AuthorizeJob);
             
             web.HttpRequest(url, HttpMethod.Get, WebUtils.BasicTimeout);
         }
@@ -208,9 +209,9 @@ namespace Cielo24
         /// <returns></returns>
         public JobList GetJobList(JobListOptions options = null)
         {
-            var url = UrlBuilder
+            var url = QueryBuilder
                 .AddFromDictionary(options?.GetDictionary())
-                .Build(Paths.GetJobList);
+                .BuildUrl(Paths.GetJobList);
             
             var serverResponse = web.HttpRequest(url, HttpMethod.Get, WebUtils.BasicTimeout);
             var jobList = Utils.Deserialize<JobList>(serverResponse);
@@ -228,9 +229,9 @@ namespace Cielo24
         {
             Assert.NotNull(fileStream, nameof(fileStream));
 
-            var url = UrlBuilder
+            var url = QueryBuilder
                 .AddJobId(jobId)
-                .Build(Paths.AddMediaToJob);
+                .BuildUrl(Paths.AddMediaToJob);
             
             var serverResponse = web.UploadData(url, fileStream, "video/mp4");
             var response = Utils.Deserialize<Dictionary<string, string>>(serverResponse);
@@ -290,20 +291,21 @@ namespace Cielo24
         /// <param name="targetLanguage"></param>
         /// <param name="options"></param>
         /// <returns></returns>
-        public Guid PerformTranscription(Guid jobId, Fidelity fidelity, Priority? priority = null,
+        public Guid PerformTranscription(Guid jobId, Fidelity fidelity, JobPriority? priority = null,
             Uri callbackUri = null, int? turnaroundHours = null,
             Language? targetLanguage = null, PerformTranscriptionOptions options = null)
         {
             Assert.NotEmpty(jobId, nameof(jobId));
 
-            var url = UrlBuilder
+            var url = QueryBuilder
+                .AddJobId(jobId)
                 .Add("transcription_fidelity", fidelity.GetDescription())
                 .AddOptional("priority", priority?.GetDescription())
                 .AddOptional("callback_url", callbackUri?.ToString())
                 .AddOptional("turnaround_hours", turnaroundHours?.ToString())
-                .AddOptional("target_language", targetLanguage.GetDescription())
+                .AddOptional("target_language", targetLanguage?.GetDescription())
                 .AddOptional("options", options != null ? JsonConvert.SerializeObject(options.GetDictionary()) : null)
-                .Build(Paths.PerformTranscription);
+                .BuildUrl(Paths.PerformTranscription);
                             
             var serverResponse = web.HttpRequest(url, HttpMethod.Get, WebUtils.BasicTimeout);
             var response = Utils.Deserialize<Dictionary<string, string>>(serverResponse);
@@ -321,9 +323,10 @@ namespace Cielo24
         { 
             Assert.NotEmpty(jobId, nameof(jobId));
 
-            var url = UrlBuilder
+            var url = QueryBuilder
+                .AddJobId(jobId)
                 .AddFromDictionary(transcriptOptions?.GetDictionary())
-                .Build(Paths.GetTranscript);
+                .BuildUrl(Paths.GetTranscript);
             
             return web.HttpRequest(url, HttpMethod.Get, WebUtils.DownloadTimeout);
         }
@@ -339,10 +342,11 @@ namespace Cielo24
         {
             Assert.NotEmpty(jobId, nameof(jobId));
 
-            var url = UrlBuilder
+            var url = QueryBuilder
                 .AddJobId(jobId)
+                .Add("caption_format", captionFormat.GetDescription())
                 .AddFromDictionary(captionOptions?.GetDictionary())
-                .Build(Paths.GetCaption);
+                .BuildUrl(Paths.GetCaption);
             
             var serverResponse = web.HttpRequest(url, HttpMethod.Get, WebUtils.DownloadTimeout);
             if (captionOptions?.BuildUrl == null || captionOptions.BuildUrl != true)
@@ -362,10 +366,10 @@ namespace Cielo24
         {
             Assert.NotEmpty(jobId, nameof(jobId));
 
-            var url = UrlBuilder
+            var url = QueryBuilder
                 .AddJobId(jobId)
                 .AddOptional("elementlist_version", Utils.DateToIsoFormat(elementListVersion))
-                .Build(Paths.GetElementList);
+                .BuildUrl(Paths.GetElementList);
             
             var serverResponse = web.HttpRequest(url, HttpMethod.Get, WebUtils.DownloadTimeout);
             return Utils.Deserialize<ElementList>(serverResponse);
@@ -395,13 +399,13 @@ namespace Cielo24
         public Dictionary<string, object> AggregateStatistics(List<string> metrics,
             string groupBy, DateTime? startDate, DateTime? endDate, string subAccount)
         {
-            var url = UrlBuilder
+            var url = QueryBuilder
                 .AddOptional("metrics", Utils.JoinQuoteList(metrics, ","))
                 .AddOptional("group_by", groupBy)
                 .AddOptional("start_date", Utils.DateToIsoFormat(startDate))
                 .AddOptional("end_date", Utils.DateToIsoFormat(endDate))
                 .AddOptional("account_id", subAccount)
-                .Build(Paths.AggregateStatistics);
+                .BuildUrl(Paths.AggregateStatistics);
             
             var serverResponse = web.HttpRequest(url, HttpMethod.Get, WebUtils.BasicTimeout);
             return Utils.Deserialize<Dictionary<string, object>>(serverResponse);
@@ -409,10 +413,10 @@ namespace Cielo24
 
         private Guid SendMediaUrl(Guid jobId, Uri mediaUrl, string path)
         {
-            var url = UrlBuilder
+            var url = QueryBuilder
                 .AddJobId(jobId)
                 .Add("media_url", mediaUrl.ToString())
-                .Build(path);            
+                .BuildUrl(path);            
             
             var serverResponse = web.HttpRequest(url, HttpMethod.Get, WebUtils.BasicTimeout);
             var response = Utils.Deserialize<Dictionary<string, string>>(serverResponse);
@@ -422,9 +426,9 @@ namespace Cielo24
 
         private T GetJobResponse<T>(Guid jobId, string path)
         {
-            var url = UrlBuilder
+            var url = QueryBuilder
                 .AddJobId(jobId)
-                .Build(path);
+                .BuildUrl(path);
 
             var serverResponse = web.HttpRequest(url, HttpMethod.Get, WebUtils.BasicTimeout);
             return Utils.Deserialize<T>(serverResponse);

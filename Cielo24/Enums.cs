@@ -55,11 +55,11 @@ namespace Cielo24
         MediaFailure
     }
 
-    public enum Priority
+    public enum JobPriority
     {
         Economy,
         Standard,
-        PRIORITY,
+        Priority,
         Critical
     }
 
@@ -88,29 +88,45 @@ namespace Cielo24
     [JsonConverter(typeof(DescriptionToEnumConverter))]
     public enum TokenType
     {
-        [Description("word")]
+        [Description("WORD")]
         Word,
-        [Description("punctuation")]
+        [Description("PUNCTIATION")]
         Punctuation,
-        [Description("sound")]
+        [Description("SOUND")]
         Sound
     }
 
+    [JsonConverter(typeof(DescriptionToEnumConverter))]
     public enum Tag
     {
+        [Description("UNKNOWN")]
         Unknown,
+        [Description("INAUDIBLE")]
         Inaudible,
+        [Description("CROSSTALK")]
         Crosstalk,
+        [Description("MUSIC")]
         Music,
+        [Description("NOISE")]
         Noise,
+        [Description("LAUGH")]
         Laugh,
+        [Description("COUGH")]
         Cough,
+        [Description("FOREIGN")]
         Foreign,
+        [Description("BLANK_AUDIO")]
         BlankAudio,
+        [Description("APPLAUSE")]
         Applause,
+        [Description("BLEEP")]
         Bleep,
+        [Description("GUESSED")]
         Guessed,
-        EndsSentence
+        [Description("ENDS_SENTENCE")]
+        EndsSentence,
+        [Description("SOUND")]
+        Sound
     }
 
     [JsonConverter(typeof(DescriptionToEnumConverter))]
@@ -205,7 +221,7 @@ namespace Cielo24
         [Description("Unknown")]
         Unknown
     }
-
+    
     /* Converts description into enum */
     public class DescriptionToEnumConverter : StringEnumConverter
     {
@@ -260,12 +276,12 @@ namespace Cielo24
             var type = value.GetType();
             var name = Enum.GetName(type, value);
             if (name == null)
-                return value.ToString();
+                return value.ToString().ToUpper();
             var field = type.GetField(name);
             if (field == null)
                 return value.ToString();
             var desc = Attribute.GetCustomAttribute(field, typeof(DescriptionAttribute)) as DescriptionAttribute;
-            return desc != null ? desc.Description : value.ToString();
+            return desc != null ? desc.Description : value.ToString().ToUpper();
         }
     }
 }
