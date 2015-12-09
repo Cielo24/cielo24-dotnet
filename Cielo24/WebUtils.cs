@@ -5,6 +5,7 @@ using System.IO;
 using System.Net;
 using System.Text;
 using NLog;
+using Newtonsoft.Json;
 
 namespace Cielo24
 {
@@ -107,19 +108,28 @@ namespace Cielo24
                 var errorStream = error.Response.GetResponseStream();
                 var streamReader = new StreamReader(errorStream);
                 var errorJson = streamReader.ReadToEnd();
-                var responseDict = Utils.Deserialize<Dictionary<string, string>>(errorJson);
-                throw new EnumWebException(responseDict["ErrorType"], responseDict["ErrorComment"], error);
+                ErrorResponse response;
+                if (Utils.TryDeserialize(errorJson, out response))
+                    throw new EnumWebException(response.ErrorType, response.ErrorMessage, error);
+                else
+                    throw new EnumWebException(ErrorType.UnhandledError, "", error);
             }
         }
+    }
+
+    public class ErrorResponse
+    {
+        public ErrorType ErrorType { get; set; }
+        public string ErrorMessage { get; set; }
     }
 
     public enum HttpMethod { Get, Post, Delete, Put }
 
     public class EnumWebException : WebException
     {
-        public string ErrorType { get; }
+        public ErrorType ErrorType { get; }
 
-        public EnumWebException(string errType, string message, Exception inner)
+        public EnumWebException(ErrorType errType, string message, Exception inner)
             : base(errType + ": " + message, inner)
         {
             ErrorType = errType;

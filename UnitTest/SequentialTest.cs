@@ -64,7 +64,7 @@ namespace Unit_Test_for_cielo24.NET_library
             }
             catch (EnumWebException e)
             {
-                Assert.AreEqual("ACCOUNT_UNPRIVILEGED", e.ErrorType, "Unexpected error type");
+                Assert.AreEqual(ErrorType.AccountUnprivileged, e.ErrorType, "Unexpected error type");
             }
         }
 

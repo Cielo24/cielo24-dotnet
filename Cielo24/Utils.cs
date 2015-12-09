@@ -20,8 +20,21 @@ namespace Cielo24
         /* Deserializes given JSON into an object of type T */
         public static T Deserialize<T>(string json)
         {
-            var result = JsonConvert.DeserializeObject<T>(json);
-            return result;
+            return JsonConvert.DeserializeObject<T>(json);
+        }
+
+        public static bool TryDeserialize<T>(string json, out T result)
+        {
+            try
+            {
+                result = Deserialize<T>(json);
+                return true;
+            }
+            catch (JsonReaderException)
+            {
+                result = default(T);
+                return false;
+            }
         }
 
         /* Joins list with delimeter, adding quotes around every element (result of the form ["item 1", "item2", "item 3"])*/

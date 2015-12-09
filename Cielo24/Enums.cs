@@ -21,22 +21,38 @@ namespace Cielo24
         JobGetElementlist
     }
 
+    [JsonConverter(typeof(DescriptionToEnumConverter))]
     public enum ErrorType
     {
+        [Description("LOGIN_INVALID")]
         LoginInvalid,
+        [Description("ACCOUNT_EXISTS")]
         AccountExists,
+        [Description("ACCOUNT_DOES_NOT_EXIST")]
         AccountDoesNotExist,
+        [Description("ACCOUNT_UNPRIVILEGED")]
         AccountUnprivileged,
+        [Description("BAD_API_TOKEN")]
         BadApiToken,
+        [Description("INVALID_QUERY")]
         InvalidQuery,
+        [Description("INVALID_OPTION")]
         InvalidOption,
+        [Description("INVALID_URL")]
         InvalidUrl,
+        [Description("MISSING_PARAMETER")]
         MissingParameter,
+        [Description("NOT_IMPLEMENTED")]
         NotImplemented,
+        [Description("ITEM_NOT_FOUND")]
         ItemNotFound,
+        [Description("INVALID_RETURN_HANDLERS")]
         InvalidReturnHandlers,
+        [Description("NOT_PARENT_ACCOUNT")]
         NotParentAccount,
+        [Description("NO_CHILDREN_FOUND")]
         NoChildrenFound,
+        [Description("UNHANDLED_ERROR")]
         UnhandledError
     }
 
