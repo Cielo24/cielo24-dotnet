@@ -277,17 +277,16 @@ namespace Cielo24
         public override object ReadJson(JsonReader reader, Type objectType, object existingValue, JsonSerializer serializer)
         {
             if (reader.Value == null)
-            {
                 return base.ReadJson(reader, objectType, existingValue, serializer);
-            }
+
             var readerValue = reader.Value.ToString().ToUpper();
             if (readerValue.Equals("STANDARD"))
-            {
                 return Fidelity.Premium;
-            }
-            return readerValue.Equals("HIGH")
-                ? Fidelity.Professional
-                : base.ReadJson(reader, objectType, existingValue, serializer);
+
+            if (readerValue.Equals("HIGH"))
+                return Fidelity.Professional;
+
+            return base.ReadJson(reader, objectType, existingValue, serializer);
         }
     }
 
