@@ -7,18 +7,18 @@ using Newtonsoft.Json.Converters;
 
 namespace Cielo24
 {
-    public enum TaskType
+    public static class TaskType
     {
-        JobCreated,
-        JobDeleted,
-        JobAddMedia,
-        JobAddTranscript,
-        JobPerformTranscription,
-        JobPerformPremiumSync,
-        JobUpdateElementlist,
-        JobGetTranscript,
-        JobGetCaption,
-        JobGetElementlist
+        public const string JobCreated = "JOB_CREATED";
+        public const string JobDeleted = "JOB_DELETED";
+        public const string JobAddMedia = "JOB_ADD_MEDIA";
+        public const string JobAddTranscript = "JOB_ADD_TRANSCRIPT";
+        public const string JobPerformTranscription = "JOB_PERFORM_TRANSCRIPTION";
+        public const string JobPerformPremiumSync = "JOB_PERFORM_PREMIUM_SYNC";
+        public const string JobUpdateElementlist = "JOB_UPDATE_ELEMENTLIST";
+        public const string JobGetTranscript = "JOB_GET_TRANSCRIPT";
+        public const string JobGetCaption = "JOB_GET_CAPTION";
+        public const string JobGetElementlist = "JOB_GET_ELEMENTLIST";
     }
 
     [JsonConverter(typeof(DescriptionToEnumConverter))]
