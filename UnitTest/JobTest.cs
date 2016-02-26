@@ -52,6 +52,11 @@ namespace UnitTest
             this.actions.AuthorizeJob(this.apiToken, this.jobId);
         }
 
+        public void testModifyJob()
+        {
+            this.actions.ModifyJob(this.apiToken, this.jobId, Fidelity.PREMIUM, 36, Priority.ECONOMY);
+        }
+
         [TestMethod]
         public void testDeleteJob()
         {
