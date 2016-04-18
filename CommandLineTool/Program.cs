@@ -118,6 +118,9 @@ namespace CommandLineTool
                     Console.WriteLine("Authorizing job...");
                     TryAction(delegate() { actions.AuthorizeJob(options.ApiToken, options.JobId); return "Job Authorized Succesfully"; });
                     break;
+                case "modify_job":
+                    Console.WriteLine("Modifying job parameters...");
+                    TryAction(delegate() { actions.ModifyJob(options.ApiToken, option.JobId, options.Fidelity, options.TurnaroundHours, options.Priority); return "Job modified successfully"; });
                 case "delete":
                     Console.WriteLine("Deleting job...");
                     TryAction(delegate() { return actions.DeleteJob(options.ApiToken, options.JobId); });

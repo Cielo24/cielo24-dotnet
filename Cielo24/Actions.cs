@@ -28,6 +28,7 @@ namespace Cielo24
         private const string REMOVE_API_KEY_PATH = "/api/account/remove_api_key";
         private const string CREATE_JOB_PATH = "/api/job/new";
         private const string AUTHORIZE_JOB_PATH = "/api/job/authorize";
+        private const string MODIFY_JOB_PATH = "/api/job/modify";
         private const string DELETE_JOB_PATH = "/api/job/del";
         private const string GET_JOB_INFO_PATH = "/api/job/info";
         private const string GET_JOB_LIST_PATH = "/api/job/list";
@@ -176,6 +177,17 @@ namespace Cielo24
             Dictionary<string, string> queryDictionary = InitJobReqDict(apiToken, jobId);
             Uri requestUri = Utils.BuildUri(BASE_URL, AUTHORIZE_JOB_PATH, queryDictionary);
             web.HttpRequest(requestUri, HttpMethod.GET, WebUtils.BASIC_TIMEOUT); // Nothing returned
+        }
+
+        /* Modify job parameters */
+        public void ModifyJob(Guid apiToken, Guid jobId, Fidelity? fidelity = null, Priority? priority = null, int? turnaroundHours = null)
+        {
+            Dictionary<string, string> queryDictionary = InitJobReqDict(apiToken, jobId);
+            if (fidelity != null) { queryDictionary.Add("transcription_fidelity", fidelity.GetDescription()); }
+            if (priority != null) { queryDictionary.Add("priority", priority.GetDescription()); }
+            if (turnaroundHours != null) { queryDictionary.Add("turnaround_hours", turnaroundHours.ToString()); }
+            Uri requestUri = Utils.BuildUri(BASE_URL, MODIFY_JOB_PATH, queryDictionary);
+            web.HttpRequest(requestUri, HttpMethod.POST, WebUtils.BASIC_TIMEOUT);
         }
 
         /* Deletes a job with jobId */
